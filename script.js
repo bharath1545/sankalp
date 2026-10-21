@@ -1,9 +1,7 @@
 /* ================= SETTINGS ================= */
 const START = new Date("2026-11-27T10:30:00+05:30"); // Hackathon opening, IST
-const RECEIVER_EMAIL = "bharathbhat87@gmail.com";
-const FORMSUBMIT_TOKEN = "3f41015aadd5b2d1769b037443832130";
-const SUBMISSION_ENDPOINT = "https://formsubmit.co/" + FORMSUBMIT_TOKEN;
-const MAX_ABSTRACT_MB = 5;
+const SUBMISSION_ENDPOINT = "/api/submit";
+const MAX_ABSTRACT_MB = 3;
 
 /* ============== page navigation ============== */
 const pageAliases={top:'home',details:'about',committee:'organisers',submit:'registration'};
@@ -146,7 +144,6 @@ const formMessage=document.getElementById('formMessage');
 const sendButton=document.getElementById('sendBtn');
 const registrationSuccess=document.getElementById('registrationSuccess');
 const allowedAbstract=/\.(pdf|docx?)$/i;
-const registrationParams=new URLSearchParams(location.search);
 
 function showFormMessage(text,type=''){
   formMessage.textContent=text;
@@ -161,16 +158,22 @@ function showRegistrationSuccess(){
   registrationSuccess.hidden=false;
 }
 
-if(registrationParams.get('registration')==='success'){
-  showRegistrationSuccess();
-}
-
 abstractFile.addEventListener('change',()=>{
   const file=abstractFile.files[0];
   abstractFileName.textContent=file?`Selected: ${file.name} (${(file.size/1048576).toFixed(2)} MB)`:''; 
 });
 
-registrationForm.addEventListener('submit',event=>{
+async function fileToBase64(file){
+  const bytes=new Uint8Array(await file.arrayBuffer());
+  let binary='';
+  for(let offset=0;offset<bytes.length;offset+=0x8000){
+    binary+=String.fromCharCode(...bytes.subarray(offset,offset+0x8000));
+  }
+  return btoa(binary);
+}
+
+registrationForm.addEventListener('submit',async event=>{
+  event.preventDefault();
   const invalid=[];
   ['teamName','collegeName','leaderPhone','themeChoice'].forEach(id=>{
     const input=document.getElementById(id);
@@ -218,30 +221,51 @@ registrationForm.addEventListener('submit',event=>{
     invalid[0].focus();
     return;
   }
-  if(location.protocol==='file:'){
-    event.preventDefault();
-    showFormMessage('Open the hosted website before submitting your registration.','err');
-    return;
-  }
-
-  const leaderEmail=registrationForm.querySelector('[name="Member 1 email"]').value.trim();
-  document.getElementById('submissionSubject').value=
-    `SANKALP 2026 registration: ${document.getElementById('teamName').value.trim()}`;
-  document.getElementById('submissionReplyTo').value=leaderEmail;
-  document.getElementById('submissionEmail').value=leaderEmail;
-  document.getElementById('submissionTeamSize').value=String(
-    [...registrationForm.querySelectorAll('[data-member]')].filter(member=>
-      [...member.querySelectorAll('input')].some(input=>input.value.trim())
-    ).length
-  );
-  const nextUrl=new URL(location.href);
-  nextUrl.searchParams.set('registration','success');
-  nextUrl.hash='registration';
-  document.getElementById('submissionNext').value=nextUrl.href;
-  registrationForm.action=SUBMISSION_ENDPOINT;
   sendButton.disabled=true;
   sendButton.textContent='Submitting…';
-  showFormMessage('Submitting your registration details and abstract…');
+  showFormMessage('Sending your registration details and abstract to the organizer…');
+
+  try{
+    const data=new FormData(registrationForm);
+    const file=abstractFile.files[0];
+    const payload={
+      teamName:data.get('Team name'),
+      college:data.get('College'),
+      leaderPhone:data.get('Leader phone'),
+      theme:data.get('Challenge theme'),
+      members:[1,2,3].map(number=>({
+        name:data.get(`Member ${number} name`),
+        usn:data.get(`Member ${number} USN`),
+        email:data.get(`Member ${number} email`),
+      })),
+      website:data.get('_honey'),
+      attachment:{
+        name:file.name,
+        type:file.type,
+        content:await fileToBase64(file),
+      },
+    };
+    const response=await fetch(SUBMISSION_ENDPOINT,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload),
+    });
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok||result.success!==true){
+      throw new Error(result.error||'Email service could not accept the registration.');
+    }
+
+    registrationForm.reset();
+    abstractFileName.textContent='';
+    showRegistrationSuccess();
+  }catch(error){
+    console.error('Registration email failed:',error);
+    const reason=error instanceof Error?error.message:'Unknown network error';
+    showFormMessage(`Your registration was not sent: ${reason}`,'err');
+  }finally{
+    sendButton.disabled=false;
+    sendButton.textContent='Submit registration details';
+  }
 });
 
 /* ============== countdown ============== */
