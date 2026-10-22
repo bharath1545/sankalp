@@ -138,9 +138,9 @@ module.exports = async function handler(req, res) {
 
   const apiKey = process.env.RESEND_API_KEY;
   const fromEmail = process.env.RESEND_FROM_EMAIL;
-  const recipient = process.env.REGISTRATION_EMAIL || 'bharathbhat87@gmail.com';
-  if (!apiKey || !fromEmail) {
-    console.error('Email configuration missing: set RESEND_API_KEY and RESEND_FROM_EMAIL in Vercel.');
+  const recipient = process.env.REGISTRATION_EMAIL;
+  if (!apiKey || !fromEmail || !recipient) {
+    console.error('Email configuration missing: set REGISTRATION_EMAIL, RESEND_API_KEY, and RESEND_FROM_EMAIL in Vercel.');
     return sendJson(res, 503, { error: 'Email delivery is not configured. Please contact the organizer.' });
   }
 
