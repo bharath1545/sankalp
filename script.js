@@ -4,14 +4,13 @@ const SUBMISSION_ENDPOINT = "/api/submit";
 const MAX_ABSTRACT_MB = 3;
 
 /* ============== page navigation ============== */
-const pageAliases={top:'home',committee:'organisers',submit:'registration'};
+const pageAliases={top:'home',committee:'organisers',submit:'registration',guidelines:'about-hackathon'};
 const pageLinks=[...document.querySelectorAll('nav a[href^="#"]')];
 const mobileMenuToggle=document.querySelector('.mobile-menu-toggle');
 const navigation=document.querySelector('nav');
 const viewGroups={
   home:['home'],
   'about-hackathon':['about-hackathon'],
-  guidelines:['guidelines'],
   organisers:['organisers'],
   registration:['registration'],
   dates:['dates'],
