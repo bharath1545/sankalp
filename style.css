@@ -170,8 +170,8 @@ footer b{color:var(--text)}
   .brand{flex:0 0 140px;width:140px}
   nav .menu-clip{flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
   nav .menu-clip::-webkit-scrollbar{display:none}
-  nav .menu{width:max-content;margin-left:auto;justify-content:flex-end;flex-wrap:nowrap;gap:4px;white-space:nowrap}
-  nav .menu a{padding:7px 8px;font-size:.78rem}
+  nav .menu{width:max-content;margin-left:auto;justify-content:flex-end;flex-wrap:nowrap;gap:12px;white-space:nowrap}
+  nav .menu a{padding:7px 6px;font-size:.78rem}
 }
 @media (min-width:761px){.hero{text-align:left}.hero .logos{margin-bottom:54px}.hero .facts{max-width:900px}.hero .cta-row,#countdown{justify-content:flex-start}}
 @media (max-width:760px){
