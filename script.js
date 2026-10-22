@@ -4,20 +4,15 @@ const SUBMISSION_ENDPOINT = "/api/submit";
 const MAX_ABSTRACT_MB = 3;
 
 /* ============== page navigation ============== */
-const pageAliases={top:'home',details:'about',committee:'organisers',submit:'registration'};
+const pageAliases={top:'home',committee:'organisers',submit:'registration'};
 const pageLinks=[...document.querySelectorAll('nav a[href^="#"]')];
-const aboutMenu=document.getElementById('aboutMenu');
-const aboutButton=aboutMenu.querySelector('button');
 const mobileMenuToggle=document.querySelector('.mobile-menu-toggle');
 const navigation=document.querySelector('nav');
 const viewGroups={
   home:['home'],
-  about:['about','organisers','guidelines'],
   organisers:['organisers'],
   registration:['registration'],
   dates:['dates'],
-  schedule:['schedule'],
-  guidelines:['guidelines'],
 };
 
 let navigationSequence=0;
@@ -89,10 +84,6 @@ function showPage(animate=false){
     if(target===requested)link.setAttribute('aria-current','page');
     else link.removeAttribute('aria-current');
   });
-  if(activeView==='about'||activeView==='organisers'||activeView==='guidelines')aboutButton.setAttribute('aria-current','page');
-  else aboutButton.removeAttribute('aria-current');
-  aboutMenu.classList.remove('open');
-  aboutButton.setAttribute('aria-expanded','false');
   closeMobileMenu();
 }
 
@@ -107,31 +98,8 @@ mobileMenuToggle.addEventListener('click',()=>{
   mobileMenuToggle.querySelector('span:last-child').textContent=open?'Close':'Menu';
 });
 pageLinks.forEach(link=>link.addEventListener('click',closeMobileMenu));
-aboutButton.addEventListener('click',()=>{
-  const isMobile=window.matchMedia('(max-width:760px)').matches;
-
-  if(isMobile){
-    location.hash='#about';
-    aboutMenu.classList.remove('open');
-    aboutButton.setAttribute('aria-expanded','false');
-    return;
-  }
-
-  const open=!aboutMenu.classList.contains('open');
-  aboutMenu.classList.toggle('open',open);
-  aboutButton.setAttribute('aria-expanded',String(open));
-  if(open){location.hash='#about';}
-});
-document.addEventListener('click',event=>{
-  if(!aboutMenu.contains(event.target)){
-    aboutMenu.classList.remove('open');
-    aboutButton.setAttribute('aria-expanded','false');
-  }
-});
 document.addEventListener('keydown',event=>{
   if(event.key==='Escape'){
-    aboutMenu.classList.remove('open');
-    aboutButton.setAttribute('aria-expanded','false');
     closeMobileMenu();
   }
 });

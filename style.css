@@ -123,13 +123,6 @@ body.page-turning{overflow-x:hidden}
 .score-label strong{color:var(--text);font-family:var(--display)}
 .score-bar{height:5px;margin-top:5px;background:#203b59}
 .score-bar i{display:block;width:var(--score);height:100%;background:var(--cyan)}
-.schedule-grid{margin-top:34px;grid-template-columns:repeat(2,minmax(0,1fr))}
-.schedule-day{padding:clamp(24px,5vw,46px);min-height:280px}
-.schedule-day>small{color:var(--cyan);font-size:.78rem;font-weight:700}
-.schedule-day h3{margin:18px 0 22px;font-size:clamp(1.5rem,3vw,2.2rem)}
-.schedule-day ol{padding-left:22px;color:var(--muted)}
-.schedule-day li{padding:5px 0 5px 5px}
-
 /* committee */
 .row{display:grid;gap:16px;margin-bottom:16px}
 .row.r4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
@@ -181,7 +174,7 @@ footer b{color:var(--text)}
   .logos{grid-template-columns:1fr;justify-items:stretch;gap:12px;text-align:left;margin-bottom:22px}.hero{padding-top:34px;padding-bottom:50px;text-align:center}.hero::before{background-position:58% center}.hero .logos{margin-bottom:22px}.hero-logo{margin-left:0}.hero-logo img{margin:0 auto}.hero .tag{margin-left:auto;margin-right:auto}.hero .motto{margin-left:auto;margin-right:auto}.logos .inst{width:100%;justify-content:flex-start}.logos .inst:last-child{justify-content:flex-start;flex-direction:row-reverse;text-align:left!important}.inst-logo.ajiet{width:70px;height:70px}.inst-logo.ieee{width:120px;height:68px}.logos .inst b{font-size:1rem}.logos .inst small{font-size:.76rem}
   .facts{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:24px 0}.fact{padding:12px}.fact b{font-size:1.05rem}
   .cta-row,#countdown{justify-content:center}.cta-row{gap:10px}.btn{width:100%;text-align:center}.btn.ghost{width:100%}
-  .timeline{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:18px}.milestone{padding-right:12px}.schedule-grid{grid-template-columns:1fr}.schedule-day{min-height:0}
+  .timeline{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:18px}.milestone{padding-right:12px}
   .stats-strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.partner-chip{padding:10px 14px}
   .cta-banner{flex-direction:column;align-items:flex-start;padding:22px 18px}.cta-banner h3{font-size:1.6rem}
 }
