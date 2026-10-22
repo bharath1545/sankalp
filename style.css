@@ -38,6 +38,8 @@ nav .menu a[aria-current="page"],nav .menu button[aria-current="page"]{outline:2
 .nav-dropdown .dropdown a{padding:10px 12px;border:0}
 .nav-dropdown .dropdown a:hover{background:var(--panel);color:var(--cyan)}
 .view[hidden]{display:none!important}
+.view{transform-style:preserve-3d;backface-visibility:hidden;transform-origin:left center}
+body.page-turning{overflow-x:hidden}
 .btn{display:inline-block;border:0;cursor:pointer;font:700 1rem var(--body);padding:13px 26px;border-radius:4px;color:#0b0a1f;text-decoration:none;
   background:var(--cyan);transition:transform .15s,box-shadow .15s}
 .btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(167,139,250,.22)}
