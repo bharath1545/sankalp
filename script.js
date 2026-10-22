@@ -11,6 +11,7 @@ const navigation=document.querySelector('nav');
 const viewGroups={
   home:['home'],
   'about-hackathon':['about-hackathon'],
+  guidelines:['guidelines'],
   organisers:['organisers'],
   registration:['registration'],
   dates:['dates'],

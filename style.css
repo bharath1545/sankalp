@@ -166,11 +166,12 @@ input.bad{border-color:var(--danger)}
 footer{border-top:1px solid rgba(96,165,250,.22);padding:34px 0;color:var(--muted);text-align:center;font-size:.92rem}
 footer b{color:var(--text)}
 @media (min-width:761px){
-  nav .wrap{display:flex;gap:16px}
-  .brand{flex:0 0 200px;width:200px}
-  nav .menu-clip{flex:1;min-width:0}
-  nav .menu{justify-content:flex-end;flex-wrap:wrap;gap:6px;white-space:normal}
-  nav .menu a{padding:8px 10px;font-size:.88rem}
+  nav .wrap{display:flex;gap:12px}
+  .brand{flex:0 0 140px;width:140px}
+  nav .menu-clip{flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+  nav .menu-clip::-webkit-scrollbar{display:none}
+  nav .menu{width:max-content;margin-left:auto;justify-content:flex-end;flex-wrap:nowrap;gap:4px;white-space:nowrap}
+  nav .menu a{padding:7px 8px;font-size:.78rem}
 }
 @media (min-width:761px){.hero{text-align:left}.hero .logos{margin-bottom:54px}.hero .facts{max-width:900px}.hero .cta-row,#countdown{justify-content:flex-start}}
 @media (max-width:760px){
