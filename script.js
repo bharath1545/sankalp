@@ -56,10 +56,9 @@ function showPage(animate=false){
   async function turnPages(){
     const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
     if(animate&&!reducedMotion&&outgoing.length){
-      document.body.classList.add('page-turning');
       await playPageTurn(outgoing,
-        [{transform:'perspective(1500px) rotateY(0deg)',opacity:1,filter:'brightness(1)'},{transform:'perspective(1500px) rotateY(-82deg)',opacity:.25,filter:'brightness(.55)'}],
-        460,'cubic-bezier(.7,0,.3,1)');
+        [{opacity:1},{opacity:0}],
+        220,'ease-out');
       if(sequence!==navigationSequence)return;
     }
 
@@ -68,13 +67,12 @@ function showPage(animate=false){
     });
     if(animate&&!reducedMotion){
       await playPageTurn(incoming,
-        [{transform:'perspective(1500px) rotateY(82deg)',opacity:.25,filter:'brightness(.55)'},{transform:'perspective(1500px) rotateY(0deg)',opacity:1,filter:'brightness(1)'}],
-        520,'cubic-bezier(.2,.7,.25,1)');
+        [{opacity:0},{opacity:1}],
+        260,'ease-in');
       if(sequence!==navigationSequence)return;
     }
     incoming.forEach(el=>el.getAnimations().forEach(animation=>animation.cancel()));
     currentView=activeView;
-    document.body.classList.remove('page-turning');
     window.scrollTo({top:0,behavior:'instant'});
   }
 
