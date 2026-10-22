@@ -165,6 +165,13 @@ input.bad{border-color:var(--danger)}
 
 footer{border-top:1px solid rgba(96,165,250,.22);padding:34px 0;color:var(--muted);text-align:center;font-size:.92rem}
 footer b{color:var(--text)}
+@media (min-width:761px){
+  nav .wrap{display:flex;gap:16px}
+  .brand{flex:0 0 200px;width:200px}
+  nav .menu-clip{flex:1;min-width:0}
+  nav .menu{justify-content:flex-end;flex-wrap:wrap;gap:6px;white-space:normal}
+  nav .menu a{padding:8px 10px;font-size:.88rem}
+}
 @media (min-width:761px){.hero{text-align:left}.hero .logos{margin-bottom:54px}.hero .facts{max-width:900px}.hero .cta-row,#countdown{justify-content:flex-start}}
 @media (max-width:760px){
   nav .wrap{min-height:0;display:flex;flex-wrap:wrap;align-items:center;padding-top:10px;padding-bottom:10px;gap:0}.brand{width:180px;margin:0}.mobile-menu-toggle{display:inline-flex;align-items:center;gap:9px;min-height:44px;margin-left:auto;padding:0 14px;border:1px solid var(--cyan);border-radius:6px;background:var(--cyan);color:#07111f;font:700 .9rem var(--body)}.menu-icon{display:grid;gap:4px;width:18px}.menu-icon i{display:block;height:2px;border-radius:2px;background:#07111f;transition:transform .2s,opacity .2s}.mobile-menu-toggle[aria-expanded="true"] .menu-icon i:first-child{transform:translateY(6px) rotate(45deg)}.mobile-menu-toggle[aria-expanded="true"] .menu-icon i:nth-child(2){opacity:0}.mobile-menu-toggle[aria-expanded="true"] .menu-icon i:last-child{transform:translateY(-6px) rotate(-45deg)}.menu-clip{display:none;flex-basis:100%;padding-top:10px}.mobile-menu-open .menu-clip{display:block}nav .menu{display:grid;width:100%;min-width:0;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;white-space:normal}nav .menu li:last-child{grid-column:1/-1}nav .menu a,nav .menu button{display:flex;width:100%;min-height:50px;justify-content:center;padding:10px 8px;border:1px solid var(--cyan);border-radius:6px;background:var(--cyan);color:#07111f;font-size:.9rem;font-weight:700;box-shadow:0 5px 14px rgba(96,165,250,.12);transition:transform .16s,filter .16s,box-shadow .16s}nav .menu a:hover,nav .menu button:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 8px 18px rgba(0,0,0,.24)}nav .menu a[aria-current="page"],nav .menu button[aria-current="page"]{outline:2px solid var(--text);outline-offset:2px;border-bottom-color:var(--text)}.nav-dropdown .dropdown{top:100%;left:0;z-index:30}.nav-dropdown .dropdown a{justify-content:flex-start}

@@ -10,6 +10,7 @@ const mobileMenuToggle=document.querySelector('.mobile-menu-toggle');
 const navigation=document.querySelector('nav');
 const viewGroups={
   home:['home'],
+  'about-hackathon':['about-hackathon'],
   organisers:['organisers'],
   registration:['registration'],
   dates:['dates'],
