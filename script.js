@@ -91,6 +91,25 @@ function showPage(animate=false){
 if(!location.hash)history.replaceState(null,'','#home');
 window.addEventListener('hashchange',()=>showPage(true));
 showPage();
+
+const revealItems=[...document.querySelectorAll('.card, .feature-card, .fact, .stat-card, .person, .theme-item, .cta-banner, .sponsor-logo')];
+if('IntersectionObserver' in window){
+  const revealObserver=new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  },{threshold:0.12});
+  revealItems.forEach(item=>{
+    item.classList.add('reveal');
+    revealObserver.observe(item);
+  });
+} else {
+  revealItems.forEach(item=>item.classList.add('visible'));
+}
+
 mobileMenuToggle.addEventListener('click',()=>{
   const open=mobileMenuToggle.getAttribute('aria-expanded')!=='true';
   navigation.classList.toggle('mobile-menu-open',open);
