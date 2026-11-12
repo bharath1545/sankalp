@@ -48,7 +48,7 @@ body.page-turning{overflow-x:hidden}
 
 /* hero */
 .hero{position:relative;isolation:isolate;overflow:hidden;padding:60px 0 70px;text-align:center;border-bottom:1px solid rgba(167,139,250,.2)}
-.hero::before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(11,10,31,.98) 0%,rgba(11,10,31,.8) 47%,rgba(11,10,31,.66) 100%),url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=2000&q=85') center 48%/cover no-repeat}
+.hero::before{content:"";position:absolute;inset:0;z-index:-2;background:radial-gradient(60% 80% at 85% 15%,rgba(99,102,241,.38),transparent 70%),radial-gradient(50% 70% at 8% 95%,rgba(139,92,246,.28),transparent 70%),linear-gradient(rgba(167,139,250,.07) 1px,transparent 1px) 0 0/48px 48px,linear-gradient(90deg,rgba(167,139,250,.07) 1px,transparent 1px) 0 0/48px 48px,linear-gradient(180deg,var(--bg2),var(--bg))}
 .hero::after{content:"SANKALP / 26";position:absolute;right:-.04em;bottom:-.27em;z-index:-1;color:rgba(167,139,250,.045);font:800 clamp(6rem,19vw,18rem)/.9 var(--display);white-space:nowrap;pointer-events:none}
 .hero .wrap{position:relative}
 .hero .pill{margin-bottom:12px}
