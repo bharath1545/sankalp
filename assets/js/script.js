@@ -1,7 +1,35 @@
 /* ================= SETTINGS ================= */
-const START = new Date("2026-11-27T10:30:00+05:30"); // Hackathon opening, IST
+const DATES = window.SANKALP_DATES; // defined in config.js
+const START = new Date(DATES.eventStart); // Hackathon opening, IST
 const SUBMISSION_ENDPOINT = "/api/submit";
 const MAX_ABSTRACT_MB = 3;
+
+/* ============== event dates (from config.js) ============== */
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function parseYmd(value){
+  const [y,m,d]=value.slice(0,10).split('-').map(Number);
+  return {y,m,d};
+}
+function formatDate(value){
+  const {y,m,d}=parseYmd(value);
+  return `${d} ${MONTHS[m-1]} ${y}`;
+}
+function formatRange(start,end){
+  const a=parseYmd(start),b=parseYmd(end);
+  if(a.y===b.y&&a.m===b.m)return a.d===b.d?formatDate(start):`${a.d}–${b.d} ${MONTHS[a.m-1]} ${a.y}`;
+  if(a.y===b.y)return `${a.d} ${MONTHS[a.m-1]} – ${b.d} ${MONTHS[b.m-1]} ${a.y}`;
+  return `${formatDate(start)} – ${formatDate(end)}`;
+}
+const dateText={
+  submission:formatDate(DATES.submission),
+  acceptance:formatDate(DATES.acceptance),
+  registration:formatDate(DATES.registration),
+  event:formatRange(DATES.eventStart,DATES.eventEnd),
+};
+document.querySelectorAll('[data-date]').forEach(el=>{
+  const text=dateText[el.dataset.date];
+  if(text)el.textContent=text;
+});
 
 /* ============== page navigation ============== */
 const pageAliases={top:'home',committee:'organisers',submit:'registration',guidelines:'about-hackathon'};
