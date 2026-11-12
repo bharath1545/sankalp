@@ -4,17 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sankalp’2026 – 3rd Edition Hackathon | AJIET Mangaluru</title>
+<!-- Meta description is static text for search engines; keep its dates in sync with assets/js/config.js -->
 <meta name="description" content="Sankalp’2026, the 3rd edition of AJIET's 24-hour hackathon. Idea submission closes on 15 November 2026, with acceptance notifications on 20 November and team registration closing on 25 November.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
 <nav>
   <div class="wrap">
-    <a class="brand" href="#home" aria-label="Sankalp '26 home"><img src="sankalp-logo.png" alt="Sankalp '26"></a>
+    <a class="brand" href="#home" aria-label="Sankalp '26 home"><img src="assets/img/logos/sankalp-logo.png" alt="Sankalp '26"></a>
     <button class="mobile-menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="primaryMenu">
       <span class="menu-icon" aria-hidden="true"><i></i><i></i><i></i></span>
       <span>Menu</span>
@@ -36,28 +37,28 @@
   <div class="wrap">
     <div class="logos">
       <div class="inst">
-        <img class="inst-logo ajiet" src="aj.jpeg" alt="AJIET logo">
+        <img class="inst-logo ajiet" src="assets/img/logos/aj.jpeg" alt="AJIET logo">
         <div class="inst-copy">
           <b>AJ Institute of Engineering and Technology</b>
           <small>NH-66, Kottara Chowki, Mangaluru – 575006, Karnataka</small>
         </div>
       </div>
       <div class="inst" style="text-align:right">
-        <img class="inst-logo ieee" src="iee.png" alt="IEEE Student Branch, AJ Institute of Engineering and Technology">
+        <img class="inst-logo ieee" src="assets/img/logos/iee.png" alt="IEEE Student Branch, AJ Institute of Engineering and Technology">
         <div class="inst-copy">
           <b>IEEE Student Branch</b>
           <small>In association with the Department of Electronics and Communication Engineering, AJIET</small>
         </div>
       </div>
     </div>
-    <span class="pill">3rd edition · Idea submission closes 15 November 2026</span>
-    <h1 class="hero-logo"><img src="sankalp-logo.png" alt="Sankalp ’26"></h1>
+    <span class="pill">3rd edition · Idea submission closes <span data-date="submission"></span></span>
+    <h1 class="hero-logo"><img src="assets/img/logos/sankalp-logo.png" alt="Sankalp ’26"></h1>
     <div class="tag">National Level 24 Hours Hackathon</div>
     <p class="motto">Think big. Innovate boldly. Build for impact.</p>
 
     <div class="facts">
-      <div class="fact"><small>Event dates</small><b>27–28 November 2026</b></div>
-      <div class="fact"><small>Idea submission</small><b>15 November 2026</b></div>
+      <div class="fact"><small>Event dates</small><b data-date="event"></b></div>
+      <div class="fact"><small>Idea submission</small><b data-date="submission"></b></div>
       <div class="fact"><small>Prize pool</small><b>₹75,000</b></div>
       <div class="fact"><small>Maximum team size</small><b>3 members</b></div>
     </div>
@@ -76,8 +77,8 @@
     <div class="sponsors" aria-label="Event sponsors">
       <h2>Our sponsors</h2>
       <div class="sponsor-logos">
-        <div class="sponsor-logo"><img src="brvnex.jpeg" alt="Bravynex Engineering"></div>
-        <div class="sponsor-logo"><img src="binary waves.jpeg" alt="Binary Waves"></div>
+        <div class="sponsor-logo"><img src="assets/img/sponsors/brvnex.jpeg" alt="Bravynex Engineering"></div>
+        <div class="sponsor-logo"><img src="assets/img/sponsors/binary-waves.jpeg" alt="Binary Waves"></div>
       </div>
     </div>
   </div>
@@ -123,9 +124,9 @@
       <article class="card"><h3>Who can participate</h3><p>Students pursuing BE/BTech, MCA, and Diploma programs are welcome to participate.</p></article>
       <article class="card"><h3>Team rules</h3><p>Each team may include up to 3 members. Provide complete name, USN, and email details for every participating member.</p></article>
       <article class="card"><h3>Abstract requirements</h3><p>Choose one of the seven problem statements and submit a one-page abstract explaining the problem, proposed solution, approach, and potential impact. Accepted file formats are PDF, DOC, or DOCX, up to 3 MB.</p></article>
-      <article class="card"><h3>Event phases</h3><p>Idea submission closes on 15 November 2026, acceptance notifications are sent on 20 November 2026, and the final team registration deadline is 25 November 2026. The 24-hour hackathon follows on 27–28 November.</p></article>
+      <article class="card"><h3>Event phases</h3><p>Idea submission closes on <span data-date="submission"></span>, acceptance notifications are sent on <span data-date="acceptance"></span>, and the final team registration deadline is <span data-date="registration"></span>. The 24-hour hackathon follows on <span data-date="event"></span>.</p></article>
       <article class="card"><h3>Registration fee and prizes</h3><p>The final registration fee is ₹600 per shortlisted team. Teams will compete for a total prize pool of ₹75,000.</p></article>
-      <article class="card"><h3>Abstract deadline and venue</h3><p>Idea submission closes on 15 November 2026. The event takes place at A.J. Institute of Engineering and Technology, NH-66, Kottara Chowki, Mangaluru.</p></article>
+      <article class="card"><h3>Abstract deadline and venue</h3><p>Idea submission closes on <span data-date="submission"></span>. The event takes place at A.J. Institute of Engineering and Technology, NH-66, Kottara Chowki, Mangaluru.</p></article>
     </div>
     <a class="btn" href="#registration" style="margin-top:32px">Submit your abstract</a>
   </div>
@@ -232,7 +233,7 @@
 <section id="submit" class="view" data-view="registration">
   <div class="wrap">
     <h2>Team and abstract registration</h2>
-    <p class="lead">Submit your team details and one-page abstract by 15 November 2026. Only shortlisted teams complete final registration and pay the ₹600 team fee by 25 November.</p>
+    <p class="lead">Submit your team details and one-page abstract by <span data-date="submission"></span>. Only shortlisted teams complete final registration and pay the ₹600 team fee by <span data-date="registration"></span>.</p>
     <form id="registrationForm" novalidate>
       <input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
       <fieldset>
@@ -314,10 +315,10 @@
     <h2>Important dates</h2>
     <p class="lead">Choose a theme and submit your one-page abstract using the registration form by the submission deadline.</p>
     <div class="timeline" aria-label="Event milestones">
-      <div class="milestone"><small>15 November 2026</small><b>Idea submission closes</b><span>Submit one page using the registration form</span></div>
-      <div class="milestone"><small>20 November 2026</small><b>Acceptance notifications</b><span>Shortlisted teams informed</span></div>
-      <div class="milestone"><small>25 November 2026</small><b>Last date of team registration</b><span>₹600 per team</span></div>
-      <div class="milestone"><small>27–28 November 2026</small><b>Sankalp’26</b><span>24-hour hackathon at AJIET</span></div>
+      <div class="milestone"><small data-date="submission"></small><b>Idea submission closes</b><span>Submit one page using the registration form</span></div>
+      <div class="milestone"><small data-date="acceptance"></small><b>Acceptance notifications</b><span>Shortlisted teams informed</span></div>
+      <div class="milestone"><small data-date="registration"></small><b>Last date of team registration</b><span>₹600 per team</span></div>
+      <div class="milestone"><small data-date="event"></small><b>Sankalp’26</b><span>24-hour hackathon at AJIET</span></div>
     </div>
     <a class="btn" href="#registration" style="margin-top:32px">How to submit</a>
   </div>
@@ -330,6 +331,7 @@
   </div>
 </footer>
 
-<script src="script.js" defer></script>
+<script src="assets/js/config.js" defer></script>
+<script src="assets/js/script.js" defer></script>
 </body>
 </html>
