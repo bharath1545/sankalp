@@ -4,3 +4,16 @@ node_modules/
 .env.*
 .DS_Store
 *.log
+
+# private AI and planning files
+AGENTS.md
+CLAUDE.md
+opencode.json
+.claude/
+Session.md
+docs/feature.md
+docs/architecture.md
+docs/decisions.md
+docs/open-questions.md
+docs/development.md
+docs/changelog.md
