@@ -1,7 +1,90 @@
 @import "tailwindcss";
 
-/* Design tokens arrive in TASK-002. */
+/* Design tokens. Source: private design kit. Dark is the default. */
+:root {
+  --void: #080510;
+  --deep: #100819;
+  --mid: #160c22;
+  --line: #30233c;
+  --line-strong: #463757;
+  --field-line: #6d5d82;
+  --white: #f5f3fa;
+  --muted: #a29aac;
+  --on-grad: #080510;
+  --cyan: #62c6e4;
+  --pink: #e98fd0;
+  --yellow: #f5ee00;
+  --danger: #f2788a;
+  --ok: #72d9b4;
+  --warn: #f0c674;
+  --grad: linear-gradient(100deg, var(--cyan), var(--pink));
+  --r-md: 8px;
+  --r-lg: 12px;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  color-scheme: dark;
+}
+
+/* Light: white and signal yellow, black text. */
+:root[data-theme="light"] {
+  --void: #ffffff;
+  --deep: #ffffff;
+  --mid: #fffbcc;
+  --line: #e4e1b0;
+  --line-strong: #111111;
+  --field-line: #111111;
+  --white: #0d0d0d;
+  --muted: #4d4b3f;
+  --on-grad: #0d0d0d;
+  --cyan: #0d0d0d;
+  --pink: #0b7a99;
+  --danger: #b3001b;
+  --ok: #0a6b3d;
+  --warn: #7a5b00;
+  --grad: linear-gradient(100deg, #f7f100, #f2ea00);
+  color-scheme: light;
+}
+
+/* Tailwind utilities: bg-void, text-white, border-line, font-display, ... */
+@theme inline {
+  --color-void: var(--void);
+  --color-deep: var(--deep);
+  --color-mid: var(--mid);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-field: var(--field-line);
+  --color-white: var(--white);
+  --color-muted: var(--muted);
+  --color-cyan: var(--cyan);
+  --color-pink: var(--pink);
+  --color-yellow: var(--yellow);
+  --color-danger: var(--danger);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --font-display: var(--font-space-grotesk), "Trebuchet MS", system-ui, sans-serif;
+  --font-body: var(--font-inter), system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --font-mono:
+    var(--font-jetbrains-mono), ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+}
+
+html {
+  background: var(--void);
+}
+
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
+  background: var(--void);
+  color: var(--white);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
