@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+/* Design tokens arrive in TASK-002. */
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+}
