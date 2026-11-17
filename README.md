@@ -14,7 +14,7 @@ assets/
   css/loader.css        loading screen styles
   js/config.js          event dates (single source of truth)
   js/script.js          hash router, registration form, countdown
-  js/loader.js          loading screen logic (once per session)
+  js/loader.js          loading screen logic
   img/logos/            AJIET, IEEE, Sankalp logos
   img/sponsors/         sponsor logos
 docs/
@@ -30,7 +30,7 @@ The `<meta name="description">` in `index.html` is plain text for search engines
 
 ## Loading screen
 
-Shown once per browser session, for at least 2.4 s (0.4 s with reduced motion). To see it again, clear `sessionStorage` or open the site in a new tab. It is hidden without JavaScript.
+Shown on every page load, including refreshes, for at least 2.4 s (0.4 s with reduced motion). It finishes only after the page and its fonts have loaded, then fades out. It is hidden without JavaScript.
 
 ## Run locally
 

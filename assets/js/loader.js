@@ -1,9 +1,9 @@
 /*
- * Loading screen. Runs once per browser session.
- * The inline snippet in index.html decides whether to show it (html.is-loading).
- * Progress eases to 92% and waits for the page's load event, takes at least 2.4 s
- * (0.4 s with reduced motion), then fades out. To see it again, clear sessionStorage
- * or open the site in a new tab/window.
+ * Loading screen. Runs on every page load, including refreshes.
+ * The inline snippet in index.html turns it on (html.is-loading).
+ * Progress eases to 92% and waits until the page has really loaded
+ * (load event and web fonts), takes at least 2.4 s (0.4 s with reduced motion),
+ * then fades out.
  */
 (function () {
   var root = document.documentElement;
@@ -16,11 +16,16 @@
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var MIN = reduce ? 400 : 2400;
   var t0 = performance.now();
-  var loaded = document.readyState === 'complete';
+  var pageLoaded = document.readyState === 'complete';
+  var fontsReady = !(document.fonts && document.fonts.ready);
+  var loaded = false;
   var shown = 0;
   var finished = false;
 
-  window.addEventListener('load', function () { loaded = true; });
+  window.addEventListener('load', function () { pageLoaded = true; });
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { fontsReady = true; }, function () { fontsReady = true; });
+  }
 
   function ease(t) { return 1 - Math.pow(1 - t, 2.4); }
 
@@ -34,7 +39,6 @@
   function finish() {
     if (finished) return;
     finished = true;
-    try { sessionStorage.setItem('sankalp-loaded', '1'); } catch (e) {}
     el.classList.add('out');
     root.classList.remove('is-loading');
     // keep the element for the fade, then remove it
@@ -47,7 +51,8 @@
 
   function frame(now) {
     var t = now - t0;
-    if (t > 7000) loaded = true; // never wait forever
+    if (t > 7000) { pageLoaded = true; fontsReady = true; } // never wait forever
+    loaded = pageLoaded && fontsReady;
     var target = ease(Math.min(1, t / MIN)) * 100;
     if (!loaded) target = Math.min(target, 92);
     else if (t >= MIN) target = 100;
