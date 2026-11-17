@@ -11,8 +11,10 @@ index.html              all pages as <section data-view="...">
 api/submit.js           Vercel function: validates the form, emails it via Resend
 assets/
   css/style.css         theme tokens in :root, then layout and responsive rules
+  css/loader.css        loading screen styles
   js/config.js          event dates (single source of truth)
   js/script.js          hash router, registration form, countdown
+  js/loader.js          loading screen logic (once per session)
   img/logos/            AJIET, IEEE, Sankalp logos
   img/sponsors/         sponsor logos
 docs/
@@ -25,6 +27,10 @@ docs/
 Edit `assets/js/config.js` only. Dates in the page and the countdown follow it.
 
 The `<meta name="description">` in `index.html` is plain text for search engines, so update its dates by hand.
+
+## Loading screen
+
+Shown once per browser session, for at least 2.4 s (0.4 s with reduced motion). To see it again, clear `sessionStorage` or open the site in a new tab. It is hidden without JavaScript.
 
 ## Run locally
 
