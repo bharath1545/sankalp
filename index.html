@@ -12,9 +12,8 @@
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/loader.css">
 <script>
-/* Show the loading screen once per session. The timeout is a safety net in case loader.js fails. */
-(function(){var r=document.documentElement;try{if(sessionStorage.getItem('sankalp-loaded'))return}catch(e){}
-r.classList.add('is-loading');setTimeout(function(){r.classList.remove('is-loading')},9000)})();
+/* Show the loading screen on every page load. The timeout is a safety net in case loader.js fails. */
+(function(){var r=document.documentElement;r.classList.add('is-loading');setTimeout(function(){r.classList.remove('is-loading')},9000)})();
 </script>
 </head>
 <body>
