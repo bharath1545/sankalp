@@ -25,6 +25,8 @@ class MemoryStorage implements Storage {
   }
 }
 vi.stubGlobal("localStorage", new MemoryStorage());
+// Same reason: the loader reads sessionStorage, which Node 22+ hides too.
+vi.stubGlobal("sessionStorage", new MemoryStorage());
 
 // jsdom has no matchMedia; next-themes reads it.
 if (!window.matchMedia) {
