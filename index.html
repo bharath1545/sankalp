@@ -10,8 +10,29 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/loader.css">
+<script>
+/* Show the loading screen once per session. The timeout is a safety net in case loader.js fails. */
+(function(){var r=document.documentElement;try{if(sessionStorage.getItem('sankalp-loaded'))return}catch(e){}
+r.classList.add('is-loading');setTimeout(function(){r.classList.remove('is-loading')},9000)})();
+</script>
 </head>
 <body>
+
+<div id="loader" role="status" aria-live="polite" aria-label="Loading Sankalp ’26">
+  <div class="ld-bloom"></div>
+  <div class="ld-in">
+    <div class="ld-wm" data-text="Sankalp ’26" aria-hidden="true">Sankalp <em>’26</em>
+      <svg class="ld-arcs" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+        <path class="ld-a1" d="M2 8 L9 14 L6 19 L14 25 L10 32"/>
+        <path class="ld-a2" d="M97 6 L91 13 L95 18 L87 24 L92 33"/>
+        <path class="ld-a3" d="M44 3 L48 9 L45 13 L52 18"/>
+      </svg>
+    </div>
+    <div class="ld-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading"><div class="ld-fill"></div></div>
+    <div class="ld-row"><span>Loading</span><b>0%</b></div>
+  </div>
+</div>
 
 <nav>
   <div class="wrap">
@@ -331,6 +352,7 @@
   </div>
 </footer>
 
+<script src="assets/js/loader.js" defer></script>
 <script src="assets/js/config.js" defer></script>
 <script src="assets/js/script.js" defer></script>
 </body>
