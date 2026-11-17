@@ -89,6 +89,153 @@ body {
   }
 }
 
+/* ---------- Hero styling (D18, D19) ---------- */
+.hero-bloom {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  width: min(120vw, 800px);
+  height: 550px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--cyan) 25%, transparent),
+    color-mix(in srgb, var(--pink) 12%, transparent) 55%,
+    transparent 75%
+  );
+  filter: blur(70px);
+}
+
+:root[data-theme="light"] .hero-bloom {
+  display: none;
+}
+
+.hero-wordmark-accent {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+:root[data-theme="light"] .hero-wordmark-accent {
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: var(--on-grad);
+  background-color: var(--yellow);
+  padding: 0 0.15em;
+  border-radius: 4px;
+}
+
+.hero-cta-primary {
+  background: var(--grad);
+  color: var(--on-grad);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--cyan) 30%, transparent);
+}
+
+.hero-cta-primary:hover {
+  box-shadow: 0 0 28px color-mix(in srgb, var(--cyan) 45%, transparent);
+}
+
+:root[data-theme="light"] .hero-cta-primary {
+  border: 1px solid var(--line-strong);
+  box-shadow: 3px 3px 0 var(--line-strong);
+}
+
+:root[data-theme="light"] .hero-cta-primary:hover {
+  box-shadow: 4px 4px 0 var(--line-strong);
+  transform: translate(-1px, -1px);
+}
+
+/* Applied to one word at a time, every few seconds. Off with reduced motion. */
+.hero-glitch {
+  position: relative;
+  display: inline-block;
+}
+
+.hero-glitch::before,
+.hero-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.hero-glitch::before {
+  color: var(--cyan);
+  transform: translate(-3px, 0);
+}
+
+.hero-glitch::after {
+  color: var(--pink);
+  transform: translate(3px, 0);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-glitch {
+    animation: hero-jit 4s steps(1, end) infinite;
+  }
+
+  .hero-glitch::before {
+    animation: hero-g1 4s steps(1, end) infinite;
+  }
+
+  .hero-glitch::after {
+    animation: hero-g2 4s steps(1, end) infinite;
+  }
+}
+
+@keyframes hero-jit {
+  0% {
+    transform: translateX(-1px);
+  }
+  3% {
+    transform: translateX(2px);
+  }
+  6% {
+    transform: none;
+  }
+  48% {
+    filter: brightness(1.2);
+  }
+  50%,
+  100% {
+    filter: none;
+    transform: none;
+  }
+}
+
+@keyframes hero-g1 {
+  0% {
+    opacity: 0.8;
+    clip-path: inset(10% 0 70% 0);
+  }
+  3% {
+    clip-path: inset(55% 0 20% 0);
+  }
+  6%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hero-g2 {
+  0% {
+    opacity: 0.8;
+    clip-path: inset(60% 0 15% 0);
+  }
+  4% {
+    clip-path: inset(15% 0 65% 0);
+  }
+  7%,
+  100% {
+    opacity: 0;
+  }
+}
+
 /* ---------- Loading screen ---------- */
 /* Shown once per session (D16). Hidden unless the boot script in layout.tsx sets
    html.is-loading, so visitors without JavaScript never see it.
