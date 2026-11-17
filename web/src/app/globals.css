@@ -88,3 +88,361 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* ---------- Loading screen ---------- */
+/* Shown once per session (D16). Hidden unless the boot script in layout.tsx sets
+   html.is-loading, so visitors without JavaScript never see it.
+   Colours are local: the loader stays pitch black in both themes. */
+#loader {
+  --ld-cyan: #62c6e4;
+  --ld-pink: #e98fd0;
+  --ld-text: #f5f3fa;
+  --ld-muted: #a29aac;
+  --ld-line: #30233c;
+  display: none;
+}
+
+html.is-loading {
+  overflow: hidden;
+}
+
+html.is-loading #loader {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #000;
+  transition:
+    opacity 0.7s ease,
+    visibility 0s 0.7s;
+}
+
+#loader.out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.ld-bloom {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(130vw, 900px);
+  aspect-ratio: 1.6;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    closest-side,
+    rgb(98 198 228 / 30%),
+    rgb(233 143 208 / 16%) 52%,
+    transparent 75%
+  );
+  filter: blur(14px);
+}
+
+.ld-in {
+  position: relative;
+  width: clamp(260px, 86vw, 780px);
+  container-type: inline-size;
+  display: grid;
+  gap: clamp(18px, 4.5cqw, 34px);
+}
+
+.ld-wm {
+  position: relative;
+  display: block;
+  white-space: nowrap;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--ld-text);
+  font-family: var(--font-space-grotesk), "Trebuchet MS", system-ui, sans-serif;
+  font-size: 10.4cqw;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-shadow:
+    -2px 0 rgb(98 198 228 / 75%),
+    2px 0 rgb(233 143 208 / 75%),
+    0 0 26px rgb(98 198 228 / 35%);
+}
+
+.ld-wm em {
+  font-style: normal;
+  background: linear-gradient(100deg, var(--ld-cyan), var(--ld-pink));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(-1.5px 0 rgb(98 198 228 / 50%))
+    drop-shadow(1.5px 0 rgb(233 143 208 / 50%));
+}
+
+/* Chromatic split used for the glitch bursts. */
+.ld-wm::before,
+.ld-wm::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  text-shadow: none;
+}
+
+.ld-wm::before {
+  color: var(--ld-cyan);
+  transform: translate(-4px, 0);
+}
+
+.ld-wm::after {
+  color: var(--ld-pink);
+  transform: translate(4px, 0);
+}
+
+.ld-arcs {
+  position: absolute;
+  left: -6%;
+  top: -30%;
+  width: 112%;
+  height: 160%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.ld-arcs path {
+  fill: none;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  vector-effect: non-scaling-stroke;
+}
+
+.ld-a1 {
+  stroke: var(--ld-cyan);
+  filter: drop-shadow(0 0 4px var(--ld-cyan));
+}
+
+.ld-a2 {
+  stroke: var(--ld-pink);
+  filter: drop-shadow(0 0 4px var(--ld-pink));
+}
+
+.ld-a3 {
+  stroke: #fff;
+  stroke-width: 1;
+  filter: drop-shadow(0 0 3px var(--ld-cyan));
+}
+
+.ld-track {
+  height: clamp(6px, 1.6cqw, 12px);
+  border: 1px solid var(--ld-line);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 9%);
+  overflow: hidden;
+}
+
+.ld-fill {
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(100deg, var(--ld-cyan), var(--ld-pink));
+  box-shadow: 0 0 18px rgb(98 198 228 / 60%);
+}
+
+.ld-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-jetbrains-mono), ui-monospace, Menlo, monospace;
+  font-size: clamp(11px, 3cqw, 16px);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.ld-row span {
+  color: var(--ld-muted);
+}
+
+.ld-row b {
+  font-weight: 500;
+  color: var(--ld-text);
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Glitch bursts and arcs repeat every 6 s while loading. None with reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html.is-loading .ld-in {
+    animation: ld-in 0.8s var(--ease) both;
+  }
+
+  html.is-loading .ld-wm {
+    animation: ld-jit 6s steps(1, end) infinite;
+  }
+
+  html.is-loading .ld-wm::before {
+    animation: ld-g1 6s steps(1, end) infinite;
+  }
+
+  html.is-loading .ld-wm::after {
+    animation: ld-g2 6s steps(1, end) infinite;
+  }
+
+  html.is-loading .ld-a1 {
+    animation: ld-z1 6s steps(1, end) infinite;
+  }
+
+  html.is-loading .ld-a2 {
+    animation: ld-z2 6s steps(1, end) infinite;
+  }
+
+  html.is-loading .ld-a3 {
+    animation: ld-z3 6s steps(1, end) infinite;
+  }
+}
+
+@keyframes ld-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(4px);
+  }
+}
+
+@keyframes ld-jit {
+  0% {
+    transform: translateX(-2px);
+  }
+  4% {
+    transform: translateX(3px);
+  }
+  8% {
+    transform: translateX(-1px);
+  }
+  11% {
+    transform: translateX(2px);
+  }
+  13%,
+  45% {
+    transform: none;
+  }
+  47% {
+    filter: brightness(1.3);
+  }
+  49%,
+  100% {
+    filter: none;
+  }
+}
+
+@keyframes ld-g1 {
+  0% {
+    opacity: 0.95;
+    clip-path: inset(8% 0 68% 0);
+  }
+  3% {
+    clip-path: inset(52% 0 22% 0);
+  }
+  6% {
+    clip-path: inset(28% 0 46% 0);
+  }
+  9% {
+    clip-path: inset(72% 0 6% 0);
+  }
+  12% {
+    opacity: 0.9;
+    clip-path: inset(0 0 85% 0);
+  }
+  14%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes ld-g2 {
+  0% {
+    opacity: 0.95;
+    clip-path: inset(62% 0 14% 0);
+  }
+  4% {
+    clip-path: inset(14% 0 66% 0);
+  }
+  8% {
+    clip-path: inset(68% 0 10% 0);
+  }
+  11% {
+    opacity: 0.9;
+    clip-path: inset(34% 0 40% 0);
+  }
+  13%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes ld-z1 {
+  0% {
+    opacity: 1;
+  }
+  3% {
+    opacity: 0;
+  }
+  6% {
+    opacity: 0.9;
+  }
+  9%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes ld-z2 {
+  0%,
+  44% {
+    opacity: 0;
+  }
+  46% {
+    opacity: 1;
+  }
+  48.5% {
+    opacity: 0;
+  }
+  51% {
+    opacity: 0.8;
+  }
+  53%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes ld-z3 {
+  0%,
+  76% {
+    opacity: 0;
+  }
+  78% {
+    opacity: 1;
+  }
+  79.5% {
+    opacity: 0;
+  }
+  81% {
+    opacity: 0.9;
+  }
+  83%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.is-loading #loader {
+    transition: none;
+  }
+}
