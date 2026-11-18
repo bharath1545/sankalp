@@ -1,113 +1,52 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { siteConfig } from "@/lib/config";
-import { countdownTo, pad2, type CountdownValues } from "@/lib/countdown";
+import { countdownTo, pad2 } from "@/lib/countdown";
 
 const TARGET = new Date(siteConfig.dates.eventStart);
 
-const DIAL_R = 40;
-const DIAL_C = 2 * Math.PI * DIAL_R;
+/** Circumference of r=44, the ring radius in the 100x100 viewBox. */
+const RING_C = 2 * Math.PI * 44;
 
-interface DialProps {
-  id: string;
-  label: string;
-  accent: "cyan" | "pink";
-  valueRef: React.RefObject<HTMLSpanElement | null>;
-  circleRef: React.RefObject<SVGCircleElement | null>;
-}
+type Unit = "d" | "h" | "m" | "s";
 
-/** Ring-gauge countdown dial. Progress is driven by refs to avoid re-renders per second. */
-function Dial({ id, label, accent, valueRef, circleRef }: DialProps) {
-  const stroke = accent === "cyan" ? "var(--cyan)" : "var(--pink)";
-  return (
-    <div className="flex flex-col items-center gap-1.5">
-      <div className="relative aspect-square w-full max-w-[74px] sm:h-[100px] sm:w-[100px] sm:max-w-none md:h-[112px] md:w-[112px]">
-        <svg
-          viewBox="0 0 100 100"
-          className="absolute inset-0 h-full w-full -rotate-90"
-          aria-hidden="true"
-        >
-          <circle
-            cx="50"
-            cy="50"
-            r={DIAL_R}
-            fill="none"
-            stroke="var(--line)"
-            strokeWidth="3"
-            opacity="0.6"
-          />
-          <circle
-            ref={circleRef}
-            cx="50"
-            cy="50"
-            r={DIAL_R}
-            fill="none"
-            stroke={stroke}
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeDasharray={DIAL_C}
-            strokeDashoffset={DIAL_C}
-            className="transition-[stroke-dashoffset] duration-700 ease-out"
-          />
-        </svg>
-        <span
-          id={id}
-          ref={valueRef}
-          className="absolute inset-0 flex items-center justify-center font-mono text-lg font-bold leading-none tabular-nums text-white sm:text-2xl md:text-3xl"
-        >
-          --
-        </span>
-      </div>
-      <span className="font-mono text-[9px] font-medium uppercase tracking-[0.18em] text-muted sm:text-xs sm:tracking-[0.25em]">
-        {label}
-      </span>
-    </div>
-  );
-}
+const units: { key: Unit; label: string; max: number }[] = [
+  { key: "d", label: "Days", max: 30 },
+  { key: "h", label: "Hours", max: 24 },
+  { key: "m", label: "Minutes", max: 60 },
+  { key: "s", label: "Seconds", max: 60 },
+];
 
+/**
+ * Ring-gauge countdown inside the launch panel. The numbers and rings are
+ * updated through refs once a second, so React does not re-render on every tick.
+ */
 export function Countdown() {
   const [begun, setBegun] = useState(false);
-
-  const dVal = useRef<HTMLSpanElement>(null);
-  const hVal = useRef<HTMLSpanElement>(null);
-  const mVal = useRef<HTMLSpanElement>(null);
-  const sVal = useRef<HTMLSpanElement>(null);
-
-  const dCircle = useRef<SVGCircleElement>(null);
-  const hCircle = useRef<SVGCircleElement>(null);
-  const mCircle = useRef<SVGCircleElement>(null);
-  const sCircle = useRef<SVGCircleElement>(null);
-
-  const setDial = useCallback(
-    (
-      valRef: React.RefObject<HTMLSpanElement | null>,
-      circleRef: React.RefObject<SVGCircleElement | null>,
-      value: number,
-      max: number,
-      doPad: boolean,
-    ) => {
-      if (valRef.current)
-        valRef.current.textContent = doPad ? pad2(value) : String(value);
-      if (circleRef.current) {
-        const frac = Math.min(value / max, 1);
-        circleRef.current.style.strokeDashoffset = String(DIAL_C * (1 - frac));
-      }
-    },
-    [],
-  );
+  const values = useRef<Partial<Record<Unit, HTMLSpanElement | null>>>({});
+  const arcs = useRef<Partial<Record<Unit, SVGCircleElement | null>>>({});
 
   useEffect(() => {
+    function show(key: Unit, value: number, max: number) {
+      const text = key === "d" ? String(value) : pad2(value);
+      const el = values.current[key];
+      if (el && el.textContent !== text) el.textContent = text;
+      const arc = arcs.current[key];
+      if (arc)
+        arc.style.strokeDashoffset = String(RING_C * (1 - Math.min(value / max, 1)));
+    }
+
     function tick(): boolean {
-      const cd: CountdownValues = countdownTo(TARGET);
+      const cd = countdownTo(TARGET);
       if (cd.remaining <= 0) {
         setBegun(true);
         return true;
       }
-      setDial(dVal, dCircle, cd.days, 30, false);
-      setDial(hVal, hCircle, cd.hours, 24, true);
-      setDial(mVal, mCircle, cd.minutes, 60, true);
-      setDial(sVal, sCircle, cd.seconds, 60, true);
+      show("d", cd.days, 30);
+      show("h", cd.hours, 24);
+      show("m", cd.minutes, 60);
+      show("s", cd.seconds, 60);
       return false;
     }
 
@@ -116,41 +55,57 @@ export function Countdown() {
       if (tick()) clearInterval(id);
     }, 1_000);
     return () => clearInterval(id);
-  }, [setDial]);
+  }, []);
 
   if (begun) {
     return (
-      <div id="countdown" className="text-center" data-testid="countdown-begun">
-        <p id="cd-note" className="font-display text-xl font-bold text-white sm:text-2xl">
-          {siteConfig.name} has begun!
-        </p>
+      <div id="countdown" className="lp-begun" data-testid="countdown-begun">
+        <p id="cd-note">{siteConfig.name} has begun!</p>
       </div>
     );
   }
 
   return (
-    <div id="countdown" data-testid="countdown" aria-live="off">
-      <div className="mx-auto grid max-w-md grid-cols-4 gap-2 sm:flex sm:max-w-none sm:items-center sm:justify-center sm:gap-5 md:gap-7">
-        <Dial id="cd-d" label="days" accent="cyan" valueRef={dVal} circleRef={dCircle} />
-        <Dial id="cd-h" label="hours" accent="cyan" valueRef={hVal} circleRef={hCircle} />
-        <Dial
-          id="cd-m"
-          label="minutes"
-          accent="pink"
-          valueRef={mVal}
-          circleRef={mCircle}
-        />
-        <Dial
-          id="cd-s"
-          label="seconds"
-          accent="pink"
-          valueRef={sVal}
-          circleRef={sCircle}
-        />
+    <div id="countdown" data-testid="countdown">
+      <svg width="0" height="0" className="absolute" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="lp-rg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="var(--lp-a)" />
+            <stop offset="1" stopColor="var(--lp-b)" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <div className="lp-rings" role="timer" aria-label="Time until the hackathon starts">
+        {units.map((u) => (
+          <div key={u.key} className="lp-ring">
+            <svg viewBox="0 0 100 100" aria-hidden="true">
+              <circle className="tr" cx="50" cy="50" r="44" />
+              <circle
+                className="pg"
+                cx="50"
+                cy="50"
+                r="44"
+                strokeDasharray={RING_C}
+                strokeDashoffset={RING_C}
+                ref={(el) => {
+                  arcs.current[u.key] = el;
+                }}
+              />
+            </svg>
+            <div className="num">
+              <span
+                id={`cd-${u.key}`}
+                ref={(el) => {
+                  values.current[u.key] = el;
+                }}
+              >
+                --
+              </span>
+              <small>{u.label}</small>
+            </div>
+          </div>
+        ))}
       </div>
-      <p id="cd-note" className="mt-4 text-center text-sm tracking-wide text-muted">
-        Until the hackathon starts
-      </p>
     </div>
   );
 }

@@ -593,3 +593,425 @@ html.is-loading #loader {
     transition: none;
   }
 }
+
+/* ---------- Launch panel and circuit timeline (T006b) ---------- */
+/* Local tokens. Dark: cyan trace and glow. Light: black trace, signal yellow spark. */
+.lp-wrap,
+.lp-tl {
+  --lp-a: var(--cyan);
+  --lp-b: var(--pink);
+  --lp-edge: rgba(98, 198, 228, 0.45);
+  --lp-trace: var(--line);
+  --lp-live: var(--cyan);
+  --lp-spark: #ffffff;
+  --lp-glow: 98, 198, 228;
+  --lp-accent: var(--cyan);
+}
+:root[data-theme="light"] .lp-wrap,
+:root[data-theme="light"] .lp-tl {
+  --lp-a: #0d0d0d;
+  --lp-b: #0b7a99;
+  --lp-edge: #0d0d0d;
+  --lp-trace: #cfcc8f;
+  --lp-live: #0d0d0d;
+  --lp-spark: #f5ee00;
+  --lp-glow: 245, 238, 0;
+  --lp-accent: #0b7a99;
+}
+
+.lp-eyebrow {
+  font:
+    500 11px var(--font-jetbrains-mono),
+    ui-monospace,
+    monospace;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+:root[data-theme="light"] .lp-eyebrow {
+  color: #0b7a99;
+}
+.lp-h2 {
+  margin: 4px 0 0;
+  font:
+    700 clamp(1.6rem, 5vw, 2.2rem) / 1.1 var(--font-space-grotesk),
+    system-ui,
+    sans-serif;
+  text-wrap: balance;
+}
+
+/* Chamfered HUD frame. padding:1px keeps the border visible on straight edges. */
+.lp-wrap {
+  display: grid;
+  gap: 20px;
+  max-width: 760px;
+  margin-top: 16px;
+}
+.lp-chamfer {
+  --c: 20px;
+  position: relative;
+  padding: 1px;
+  background: var(--lp-edge);
+  clip-path: polygon(
+    var(--c) 0,
+    100% 0,
+    100% calc(100% - var(--c)),
+    calc(100% - var(--c)) 100%,
+    0 100%,
+    0 var(--c)
+  );
+}
+.lp-chamfer > .in {
+  background: var(--deep);
+  clip-path: polygon(
+    var(--c) 0,
+    100% 0,
+    100% calc(100% - var(--c)),
+    calc(100% - var(--c)) 100%,
+    0 100%,
+    0 var(--c)
+  );
+}
+.lp-hud > .in {
+  padding: 28px 20px 22px;
+}
+
+/* Ring gauges */
+.lp-rings {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(6px, 2vw, 20px);
+  justify-items: center;
+}
+.lp-ring {
+  position: relative;
+  width: 100%;
+  max-width: 110px;
+  aspect-ratio: 1;
+}
+.lp-ring svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.lp-ring .tr {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 5;
+}
+:root[data-theme="light"] .lp-ring .tr {
+  stroke: rgba(13, 13, 13, 0.18);
+}
+.lp-ring .pg {
+  fill: none;
+  stroke: url(#lp-rg);
+  stroke-width: 5;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease;
+}
+.lp-ring .num {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  font:
+    700 clamp(1.3rem, 6vw, 2.1rem) / 1 var(--font-space-grotesk),
+    system-ui,
+    sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.lp-ring .num small {
+  display: block;
+  margin-top: 4px;
+  font:
+    500 9px var(--font-jetbrains-mono),
+    ui-monospace,
+    monospace;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.lp-when {
+  margin: 20px 0 0;
+  text-align: center;
+  font:
+    400 13px var(--font-jetbrains-mono),
+    ui-monospace,
+    monospace;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.lp-when b {
+  color: var(--white);
+  font-weight: 700;
+}
+.lp-begun {
+  padding: 24px 0;
+  text-align: center;
+  font:
+    700 1.6rem var(--font-space-grotesk),
+    system-ui,
+    sans-serif;
+}
+
+/* Numbered facts */
+.lp-facts {
+  padding: 6px 20px;
+}
+.lp-fact {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.lp-fact:last-child {
+  border-bottom: 0;
+}
+.lp-fact .ix {
+  font:
+    500 11px var(--font-jetbrains-mono),
+    ui-monospace,
+    monospace;
+  letter-spacing: 0.1em;
+  color: var(--lp-accent);
+}
+.lp-fact .tt {
+  font-weight: 600;
+  font-size: 15px;
+}
+.lp-fact .tt small {
+  display: block;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--muted);
+}
+.lp-fact .vv {
+  font:
+    700 clamp(1.3rem, 5vw, 1.7rem) var(--font-space-grotesk),
+    system-ui,
+    sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Circuit timeline. A trace runs down the page; current runs along it to the next milestone. */
+.lp-tl {
+  --col: 56px;
+  position: relative;
+  max-width: 760px;
+  margin-top: 28px;
+  padding: 8px 0;
+}
+.lp-tl ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lp-trace {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--col) / 2);
+  width: 3px;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: var(--lp-trace);
+}
+.lp-lit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--lit, 0px);
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--lp-live);
+  box-shadow: 0 0 10px rgba(var(--lp-glow), 0.55);
+  transition: height 0.6s ease;
+}
+.lp-lit::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: -90px;
+  height: 90px;
+  background: linear-gradient(180deg, transparent, var(--lp-spark) 70%, transparent);
+}
+.lp-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--col) 1fr;
+  min-height: 112px;
+}
+.lp-step:last-child {
+  min-height: 0;
+}
+.lp-node {
+  position: relative;
+  display: grid;
+  place-items: start center;
+  padding-top: 6px;
+}
+.lp-node i {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--deep);
+  border: 3px solid var(--lp-trace);
+  transition:
+    border-color 0.4s,
+    box-shadow 0.4s;
+}
+.lp-node i::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: var(--lp-trace);
+  transition: background 0.4s;
+}
+.lp-step[data-passed="true"] .lp-node i {
+  border-color: var(--lp-live);
+  box-shadow:
+    0 0 0 4px rgba(var(--lp-glow), 0.18),
+    0 0 14px rgba(var(--lp-glow), 0.6);
+}
+.lp-step[data-passed="true"] .lp-node i::after {
+  background: var(--lp-spark);
+}
+:root[data-theme="light"] .lp-step[data-passed="true"] .lp-node i::after {
+  box-shadow: inset 0 0 0 1px #0d0d0d;
+}
+.lp-step[data-next="true"] .lp-node i {
+  border-color: var(--lp-live);
+}
+.lp-card {
+  position: relative;
+  margin: 0 0 20px 8px;
+  padding: 2px 0 0 22px;
+}
+/* Elbow from the trace to the card, ending in a small pad. */
+.lp-card::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 16px;
+  width: 24px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--lp-trace);
+}
+.lp-card::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 12px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--deep);
+  border: 2px solid var(--lp-trace);
+}
+.lp-step[data-passed="true"] .lp-card::before {
+  background: var(--lp-live);
+}
+.lp-step[data-passed="true"] .lp-card::after {
+  border-color: var(--lp-live);
+}
+.lp-date {
+  margin: 0;
+  padding-left: 20px;
+  font:
+    700 12px var(--font-jetbrains-mono),
+    ui-monospace,
+    monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--lp-accent);
+}
+.lp-card h3 {
+  margin: 2px 0;
+  padding-left: 20px;
+  font:
+    700 1.15rem / 1.25 var(--font-space-grotesk),
+    system-ui,
+    sans-serif;
+}
+.lp-note {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.lp-step[data-done="true"] .lp-card h3 {
+  color: var(--muted);
+}
+
+@media (min-width: 760px) {
+  .lp-tl {
+    --col: 72px;
+  }
+  .lp-trace {
+    left: 50%;
+  }
+  .lp-step {
+    grid-template-columns: 1fr var(--col) 1fr;
+  }
+  .lp-step .lp-node {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .lp-step:nth-child(odd) .lp-card {
+    grid-column: 3;
+    margin-left: 0;
+  }
+  .lp-step:nth-child(even) .lp-card {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0 0 20px;
+    padding: 2px 22px 0 0;
+    text-align: right;
+  }
+  .lp-step:nth-child(even) .lp-card::before {
+    left: auto;
+    right: -8px;
+  }
+  .lp-step:nth-child(even) .lp-card::after {
+    left: auto;
+    right: 14px;
+  }
+  .lp-step:nth-child(even) .lp-date,
+  .lp-step:nth-child(even) .lp-card h3,
+  .lp-step:nth-child(even) .lp-note {
+    padding-left: 0;
+    padding-right: 20px;
+  }
+}
+
+/* Motion: pulse along the lit trace and a slow blink on the next node. None with reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .lp-lit::after {
+    animation: lp-run 2.6s linear infinite;
+  }
+  .lp-step[data-next="true"] .lp-node i {
+    animation: lp-blink 1.6s ease-in-out infinite;
+  }
+}
+@keyframes lp-run {
+  to {
+    top: 100%;
+  }
+}
+@keyframes lp-blink {
+  50% {
+    box-shadow: 0 0 0 6px rgba(var(--lp-glow), 0.22);
+  }
+}

@@ -23,15 +23,15 @@ describe("Hero", () => {
     expect(screen.getByText(/national-level 24-hour hackathon/i)).toBeInTheDocument();
   });
 
-  it("renders the CTA buttons", () => {
+  it("makes Final Registration the primary CTA and links to abstract registration", () => {
     render(<Hero />);
-    expect(screen.getByRole("link", { name: /submit your abstract/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Final Registration" })).toHaveAttribute(
+      "href",
+      "/final-registration",
+    );
+    expect(screen.getByRole("link", { name: /abstract registration/i })).toHaveAttribute(
       "href",
       "#registration",
-    );
-    expect(screen.getByRole("link", { name: /problem statements/i })).toHaveAttribute(
-      "href",
-      "#themes",
     );
   });
 
@@ -39,8 +39,22 @@ describe("Hero", () => {
     render(<Hero />);
     expect(screen.getByText("24")).toBeInTheDocument();
     expect(screen.getByText("₹75,000")).toBeInTheDocument();
-    expect(screen.getByText("3 members")).toBeInTheDocument();
+    expect(screen.getAllByText("03")).toHaveLength(2); // index and value
     expect(screen.getByText("₹600")).toBeInTheDocument();
+  });
+
+  it("shows the event date, time and city under the countdown", () => {
+    render(<Hero />);
+    expect(screen.getByText(/10:30 AM IST/)).toHaveTextContent("27–28 November 2026");
+    expect(screen.getByText(/10:30 AM IST/)).toHaveTextContent("Mangaluru");
+  });
+
+  it("numbers the facts 01 to 04", () => {
+    const { container } = render(<Hero />);
+    const indexes = [...container.querySelectorAll(".lp-fact .ix")].map(
+      (el) => el.textContent,
+    );
+    expect(indexes).toEqual(["01", "02", "03", "04"]);
   });
 
   it("renders the pill with edition and submission date", () => {
