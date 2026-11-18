@@ -620,7 +620,6 @@ html.is-loading #loader {
 }
 
 .lp-eyebrow {
-  margin: 0;
   font:
     500 11px var(--font-jetbrains-mono),
     ui-monospace,
