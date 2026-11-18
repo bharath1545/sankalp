@@ -66,9 +66,24 @@ describe("Countdown", () => {
     expect(screen.getByTestId("countdown-begun")).toBeInTheDocument();
   });
 
-  it("shows the descriptive text when counting down", () => {
+  it("labels the timer for assistive tech and each ring", () => {
     vi.setSystemTime(new Date("2026-11-17T10:00:00+05:30"));
     render(<Countdown />);
-    expect(screen.getByText(/until the hackathon starts/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole("timer", { name: /until the hackathon starts/i }),
+    ).toBeInTheDocument();
+    for (const label of ["Days", "Hours", "Minutes", "Seconds"]) {
+      expect(screen.getByText(label)).toBeInTheDocument();
+    }
+  });
+
+  it("fills each ring in proportion to its unit", () => {
+    // 10 days 2 h 4 min 5 s left: seconds ring is 5/60 full
+    vi.setSystemTime(new Date("2026-11-17T08:25:55+05:30"));
+    const { container } = render(<Countdown />);
+    const arcs = container.querySelectorAll<SVGCircleElement>("circle.pg");
+    expect(arcs).toHaveLength(4);
+    const c = 2 * Math.PI * 44;
+    expect(Number(arcs[3].style.strokeDashoffset)).toBeCloseTo(c * (1 - 5 / 60), 2);
   });
 });

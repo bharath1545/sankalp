@@ -10,18 +10,38 @@ function splitWordmark(name: string): [string, string] {
 
 const [wordmarkLead, wordmarkTail] = splitWordmark(siteConfig.name);
 
-/** Quick fact shown below the CTA row (D19 numbered list). */
+/** Opening time shown in the launch panel. Keep in step with siteConfig.dates.eventStart. */
+const EVENT_TIME = "10:30 AM IST";
+const city = siteConfig.venue.address.split(",").pop()?.trim() ?? "";
+
+/** Numbered facts shown under the countdown. */
 interface Fact {
   num: string;
   label: string;
+  hint: string;
   value: string;
 }
 
 const facts: Fact[] = [
-  { num: "01", label: "Hours", value: "24" },
-  { num: "02", label: "Prize pool", value: formatInr(siteConfig.prizePoolInr) },
-  { num: "03", label: "Per team", value: `${siteConfig.teamSize.max} members` },
-  { num: "04", label: "Fee per team", value: formatInr(siteConfig.feePerTeamInr) },
+  { num: "01", label: "Hours", hint: "Non-stop, on campus", value: "24" },
+  {
+    num: "02",
+    label: "Prize pool",
+    hint: "Across the winning teams",
+    value: formatInr(siteConfig.prizePoolInr),
+  },
+  {
+    num: "03",
+    label: "Per team",
+    hint: "Maximum members",
+    value: String(siteConfig.teamSize.max).padStart(2, "0"),
+  },
+  {
+    num: "04",
+    label: "Fee per team",
+    hint: "Paid by UPI",
+    value: formatInr(siteConfig.feePerTeamInr),
+  },
 ];
 
 export function Hero() {
@@ -52,48 +72,53 @@ export function Hero() {
           Think big. Innovate boldly. Build for impact.
         </p>
 
-        {/* CTA row */}
+        {/* CTA row. Final Registration is the main action. */}
         <div className="mt-8 flex flex-wrap gap-3">
           <a
-            href="#registration"
+            href="/final-registration"
             className="hero-cta-primary inline-flex h-12 items-center rounded-md px-6 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan sm:text-base"
           >
-            Submit your abstract
+            Final Registration
           </a>
           <a
-            href="#themes"
+            href="#registration"
             className="inline-flex h-12 items-center rounded-md border border-cyan/50 px-6 text-sm font-medium text-cyan transition-colors hover:border-cyan hover:bg-mid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan sm:text-base"
           >
-            Problem statements
+            Abstract registration
           </a>
         </div>
 
-        {/* Facts strip (D19: numbered list) */}
-        <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
-          {facts.map((f) => (
-            <div key={f.num} className="border-t border-line pt-3">
-              <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted sm:tracking-[0.3em]">
-                {f.num} {f.label}
-              </span>
-              <p className="mt-1 font-display text-xl font-bold text-white sm:text-2xl">
-                {f.value}
+        {/* Launch panel: countdown, then numbered facts */}
+        <p className="lp-eyebrow mt-14 sm:mt-16">Launch window</p>
+        <div className="lp-wrap">
+          <div className="lp-chamfer lp-hud">
+            <div className="in">
+              <Countdown />
+              <p className="lp-when">
+                <b>{dateText.event}</b> · {EVENT_TIME} · {city}
               </p>
             </div>
-          ))}
+          </div>
+          <div className="lp-chamfer">
+            <div className="in lp-facts">
+              {facts.map((f) => (
+                <div key={f.num} className="lp-fact">
+                  <span className="ix">{f.num}</span>
+                  <span className="tt">
+                    {f.label}
+                    <small>{f.hint}</small>
+                  </span>
+                  <span className="vv">{f.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Countdown dials */}
-        <div className="mt-14 sm:mt-16">
-          <Countdown />
-        </div>
-
-        {/* Mini timeline */}
-        <div className="mt-14 sm:mt-16">
-          <h2 className="mb-6 text-center font-mono text-xs font-medium uppercase tracking-[0.3em] text-muted">
-            Key dates
-          </h2>
-          <MiniTimeline />
-        </div>
+        {/* Key dates as a circuit */}
+        <p className="lp-eyebrow mt-14 sm:mt-16">Key dates</p>
+        <h2 className="lp-h2">Power on, step by step</h2>
+        <MiniTimeline />
       </div>
     </section>
   );

@@ -1,64 +1,123 @@
-import { dateText, siteConfig, formatInr } from "@/lib/config";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { dateText, formatInr, siteConfig } from "@/lib/config";
+import { milestoneTime, timelineState } from "@/lib/timeline";
 
 interface Milestone {
   date: string;
+  at: string;
   title: string;
   note: string;
 }
 
+const { dates } = siteConfig;
+
 const milestones: Milestone[] = [
   {
     date: dateText.submission,
+    at: dates.submission,
     title: "Idea submission closes",
     note: "Submit one-page abstract using the registration form",
   },
   {
     date: dateText.acceptance,
+    at: dates.acceptance,
     title: "Acceptance notifications",
     note: "Shortlisted teams informed",
   },
   {
     date: dateText.registration,
+    at: dates.registration,
     title: "Last date of team registration",
     note: `${formatInr(siteConfig.feePerTeamInr)} per team`,
   },
   {
     date: dateText.event,
+    at: dates.eventStart,
     title: siteConfig.name,
-    note: `24-hour hackathon at ${siteConfig.venue.name.split(",")[0]}`,
+    note: `24-hour hackathon at ${siteConfig.venue.name}`,
   },
 ];
 
+const times = milestones.map((m) => milestoneTime(m.at));
+
+/**
+ * Key dates drawn as a circuit board. Milestones that have passed are lit and
+ * current runs along the trace up to the next one. State is set after mount so
+ * the server and first client render match.
+ */
 export function MiniTimeline() {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const nodeRefs = useRef<(HTMLElement | null)[]>([]);
+  const [now, setNow] = useState<number | null>(null);
+
+  useEffect(() => {
+    setNow(Date.now());
+    const id = setInterval(() => setNow(Date.now()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  const ready = now !== null;
+  const state = ready ? timelineState(times, now) : null;
+  const litTo = state?.litTo ?? 0;
+  const lastPassed = state ? (state.next === -1 ? times.length - 1 : state.next - 1) : -1;
+
+  // Length of the lit trace = distance from the top of the board to the target node.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root || !ready) return;
+    const measure = () => {
+      const node = nodeRefs.current[litTo];
+      if (!node) return;
+      const n = node.getBoundingClientRect();
+      const h = n.top + n.height / 2 - root.getBoundingClientRect().top;
+      root.style.setProperty("--lit", `${Math.max(h, 0)}px`);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    void document.fonts?.ready.then(measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [ready, litTo]);
+
   return (
     <div
-      className="relative mx-auto max-w-xl"
+      ref={rootRef}
+      className="lp-tl"
       aria-label="Event milestones"
       data-testid="mini-timeline"
     >
-      {/* Vertical line */}
-      <div
-        className="absolute left-3 top-2 bottom-2 w-px bg-line sm:left-4"
-        aria-hidden="true"
-      />
-
-      <ol className="space-y-6">
-        {milestones.map((ms) => (
-          <li key={ms.title} className="relative pl-9 sm:pl-11">
-            {/* Dot */}
-            <span
-              className="absolute left-[9px] top-1.5 h-[7px] w-[7px] rounded-full bg-cyan shadow-[0_0_6px_var(--cyan)] sm:left-[13px]"
-              aria-hidden="true"
-            />
-            <p className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-cyan">
-              {ms.date}
-            </p>
-            <p className="mt-0.5 font-display text-sm font-semibold text-white sm:text-base">
-              {ms.title}
-            </p>
-            <p className="mt-0.5 text-xs text-muted sm:text-sm">{ms.note}</p>
-          </li>
-        ))}
+      <div className="lp-trace" aria-hidden="true">
+        <div className="lp-lit" />
+      </div>
+      <ol>
+        {milestones.map((m, i) => {
+          const passed = state?.passed[i] ?? false;
+          const isNext = state?.next === i;
+          const done = passed && i < lastPassed;
+          return (
+            <li
+              key={m.title}
+              className="lp-step"
+              data-passed={passed}
+              data-next={isNext}
+              data-done={done}
+            >
+              <div className="lp-node">
+                <i
+                  ref={(el) => {
+                    nodeRefs.current[i] = el;
+                  }}
+                />
+              </div>
+              <div className="lp-card">
+                <p className="lp-date">{m.date}</p>
+                <h3>{m.title}</h3>
+                <p className="lp-note">{m.note}</p>
+              </div>
+            </li>
+          );
+        })}
       </ol>
     </div>
   );
