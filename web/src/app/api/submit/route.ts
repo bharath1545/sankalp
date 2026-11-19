@@ -1,3 +1,4 @@
+import { isAbstractClosed } from "@/lib/abstract-rules";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { formatEmail, validateSubmission } from "@/lib/submission";
 
@@ -25,6 +26,11 @@ export async function POST(request: Request) {
       { error: "Too many submissions. Please wait a few minutes and try again." },
       { "Retry-After": "600" },
     );
+  }
+
+  // The form is covered after the deadline, but anyone can POST directly. Refuse here too.
+  if (isAbstractClosed(Date.now())) {
+    return json(410, { error: "Abstract registration is closed." });
   }
 
   const declared = Number(request.headers.get("content-length"));
