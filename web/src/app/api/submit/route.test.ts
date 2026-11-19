@@ -39,6 +39,9 @@ describe("POST /api/submit", () => {
   const fetchMock = vi.fn();
 
   beforeEach(() => {
+    // Before the 15 Nov deadline. Only Date is faked.
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-11-10T10:00:00+05:30"));
     fetchMock.mockReset();
     fetchMock.mockResolvedValue({ ok: true, status: 200, text: async () => "" });
     vi.stubGlobal("fetch", fetchMock);
@@ -48,6 +51,7 @@ describe("POST /api/submit", () => {
     vi.spyOn(console, "error").mockImplementation(() => undefined);
   });
   afterEach(() => {
+    vi.useRealTimers();
     vi.unstubAllGlobals();
     vi.unstubAllEnvs();
     vi.restoreAllMocks();
@@ -71,6 +75,19 @@ describe("POST /api/submit", () => {
     expect(sent.attachments).toEqual([
       { filename: "idea.pdf", content_type: "application/pdf", content: pdf },
     ]);
+  });
+
+  it("still accepts a submission late on the deadline day (IST)", async () => {
+    vi.setSystemTime(new Date("2026-11-15T23:59:00+05:30"));
+    expect((await POST(req(goodBody()))).status).toBe(200);
+  });
+
+  it("refuses submissions after the deadline with 410 and sends nothing", async () => {
+    vi.setSystemTime(new Date("2026-11-16T00:00:00+05:30"));
+    const res = await POST(req(goodBody()));
+    expect(res.status).toBe(410);
+    expect((await res.json()).error).toBe("Abstract registration is closed.");
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("answers a honeypot hit with success and sends nothing", async () => {
