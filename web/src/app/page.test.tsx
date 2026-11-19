@@ -17,4 +17,13 @@ describe("home page", () => {
     const section = screen.getByTestId("abstract-registration");
     expect(section).toContainElement(screen.getByTestId("abstract-form"));
   });
+
+  it("places the FAQ after the abstract registration", () => {
+    render(<Page />);
+    const registration = screen.getByTestId("abstract-registration");
+    const faq = screen.getByTestId("faq");
+    expect(
+      registration.compareDocumentPosition(faq) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
 });
