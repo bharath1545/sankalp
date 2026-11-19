@@ -1,12 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { dateText, siteConfig } from "@/lib/config";
-import { milestoneTime } from "@/lib/timeline";
-
-const DAY_MS = 86_400_000;
-/** The submission day counts as open until it ends (IST). */
-const closesAt = milestoneTime(siteConfig.dates.submission) + DAY_MS;
+import { isAbstractClosed } from "@/lib/abstract-rules";
+import { dateText } from "@/lib/config";
 
 /**
  * Shows whether abstract submission is open. Before mount it shows a neutral
@@ -19,7 +15,7 @@ export function DeadlineBadge() {
     setNow(Date.now());
   }, []);
 
-  const closed = now !== null && now >= closesAt;
+  const closed = now !== null && isAbstractClosed(now);
   const label = now === null ? "Deadline" : closed ? "Closed on" : "Open until";
 
   return (
