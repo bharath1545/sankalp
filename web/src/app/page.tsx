@@ -1,4 +1,6 @@
 import { About } from "@/components/about";
+import { AbstractForm } from "@/components/abstract-form";
+import { AbstractFormGate } from "@/components/abstract-form-gate";
 import { AbstractRegistration } from "@/components/abstract-registration";
 import { Hero } from "@/components/hero";
 import { Prizes } from "@/components/prizes";
@@ -11,7 +13,11 @@ export default function Page() {
       <About />
       <Tracks />
       <Prizes />
-      <AbstractRegistration />
+      <AbstractRegistration>
+        <AbstractFormGate>
+          <AbstractForm />
+        </AbstractFormGate>
+      </AbstractRegistration>
     </>
   );
 }

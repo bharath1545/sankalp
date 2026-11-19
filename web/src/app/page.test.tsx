@@ -11,4 +11,10 @@ describe("home page", () => {
     render(<Page />);
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Sankalp’26");
   });
+
+  it("mounts the abstract form inside the registration section", () => {
+    render(<Page />);
+    const section = screen.getByTestId("abstract-registration");
+    expect(section).toContainElement(screen.getByTestId("abstract-form"));
+  });
 });
