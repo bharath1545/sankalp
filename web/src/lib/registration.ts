@@ -60,9 +60,9 @@ export function emptyValues(): AbstractFormValues {
   };
 }
 
-const PHONE = /^[6-9]\d{9}$/;
-const USN = /^[A-Za-z0-9]{8,12}$/;
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+export const PHONE_RE = /^[6-9]\d{9}$/;
+export const USN_RE = /^[A-Za-z0-9]{8,12}$/;
+export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const ABSTRACT_NAME = new RegExp(
   `\\.(${ABSTRACT_FORMATS.map((f) => f.toLowerCase()).join("|")})$`,
   "i",
@@ -87,7 +87,7 @@ export function validateRegistration(
 
   if (!values.leaderPhone.trim()) {
     errors.leaderPhone = "Enter the team leader’s phone number.";
-  } else if (!PHONE.test(values.leaderPhone.replace(/\D/g, "").slice(-10))) {
+  } else if (!PHONE_RE.test(values.leaderPhone.replace(/\D/g, "").slice(-10))) {
     errors.leaderPhone = "Enter a valid 10-digit mobile number.";
   }
 
@@ -116,7 +116,7 @@ export function validateRegistration(
     }
     if (v.usn) {
       const key = memberKey(i, "usn");
-      if (!USN.test(v.usn)) errors[key] = "USN must be 8 to 12 letters or numbers.";
+      if (!USN_RE.test(v.usn)) errors[key] = "USN must be 8 to 12 letters or numbers.";
       const normalized = v.usn.toUpperCase();
       if (usns.has(normalized))
         errors[key] = "This USN is already used by another member.";
@@ -124,7 +124,7 @@ export function validateRegistration(
     }
     if (v.email) {
       const key = memberKey(i, "email");
-      if (!EMAIL.test(v.email)) errors[key] = "Enter a valid email address.";
+      if (!EMAIL_RE.test(v.email)) errors[key] = "Enter a valid email address.";
       const normalized = v.email.toLowerCase();
       if (emails.has(normalized))
         errors[key] = "This email is already used by another member.";
