@@ -254,6 +254,7 @@
   <div class="wrap">
     <h2>Team and abstract registration</h2>
     <p class="lead">Submit your team details and one-page abstract by <span data-date="submission"></span>. Only shortlisted teams complete final registration and pay the ₹600 team fee by <span data-date="registration"></span>.</p>
+    <div class="gate" id="registrationGate">
     <form id="registrationForm" novalidate>
       <input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
       <fieldset>
@@ -316,6 +317,17 @@
       <button class="btn" type="submit" id="sendBtn">Submit registration details</button>
       <p id="formMessage" role="status" aria-live="polite"></p>
     </form>
+    <div class="gate-cover" id="registrationClosed" role="status" hidden>
+      <span class="sr-only">Abstract registration closed. Submissions are no longer accepted. Something is cooking.</span>
+      <div class="tape" aria-hidden="true">
+        <div class="tape-track">
+          <div class="tape-group"><span>Abstract registration closed</span><span>Abstract registration closed</span><span>Abstract registration closed</span><span>Abstract registration closed</span><span>Abstract registration closed</span><span>Abstract registration closed</span></div>
+          <div class="tape-group"><span>Abstract registration closed</span><span>Abstract registration closed</span><span>Abstract registration closed</span><span>Abstract registration closed</span><span>Abstract registration closed</span><span>Abstract registration closed</span></div>
+        </div>
+      </div>
+      <p class="cooking" aria-hidden="true">Something is cooking<span>.</span><span>.</span><span>.</span></p>
+    </div>
+    </div>
     <div id="registrationSuccess" role="status" aria-live="polite" hidden>
       <h2>Thank you!</h2>
     </div>
