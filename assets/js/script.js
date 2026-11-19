@@ -140,6 +140,19 @@ const abstractFileName=document.getElementById('abstractFileName');
 const formMessage=document.getElementById('formMessage');
 const sendButton=document.getElementById('sendBtn');
 const registrationSuccess=document.getElementById('registrationSuccess');
+
+/* Abstract submission closes at the end of the submission day (IST). Cover the form after that. */
+(function closeRegistrationAfterDeadline(){
+  const gate=document.getElementById('registrationGate');
+  const cover=document.getElementById('registrationClosed');
+  if(!gate||!cover)return;
+  const closesAt=new Date(DATES.submission+'T00:00:00+05:30').getTime()+86400000;
+  if(Date.now()<closesAt)return;
+  gate.classList.add('closed');
+  registrationForm.inert=true;
+  registrationForm.setAttribute('aria-hidden','true');
+  cover.hidden=false;
+})();
 const allowedAbstract=/\.(pdf|docx?)$/i;
 
 function showFormMessage(text,type=''){
