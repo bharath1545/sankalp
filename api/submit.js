@@ -1,4 +1,12 @@
 const MAX_ABSTRACT_BYTES = 3 * 1024 * 1024;
+// Last day of abstract submission (IST). Keep in sync with `submission` in assets/js/config.js.
+const SUBMISSION_DEADLINE = '2026-11-15';
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function isSubmissionClosed(now = Date.now()) {
+  return now >= new Date(`${SUBMISSION_DEADLINE}T00:00:00+05:30`).getTime() + DAY_MS;
+}
+
 const ALLOWED_FILE_TYPES = new Map([
   ['.pdf', new Set(['application/pdf', 'application/octet-stream'])],
   ['.doc', new Set(['application/msword', 'application/octet-stream'])],
@@ -123,6 +131,9 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return sendJson(res, 405, { error: 'Method not allowed.' });
+  }
+  if (isSubmissionClosed()) {
+    return sendJson(res, 410, { error: 'Abstract registration is closed.' });
   }
   if (!req.body || typeof req.body !== 'object' || Array.isArray(req.body)) {
     return sendJson(res, 400, { error: 'Invalid registration data.' });
