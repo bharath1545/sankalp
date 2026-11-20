@@ -1,3 +1,4 @@
+import { Dock } from "./dock";
 import { Footer } from "./footer";
 import { Header } from "./header";
 import { SmoothScroll } from "./smooth-scroll";
@@ -18,6 +19,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         {children}
       </main>
       <Footer />
+      <Dock />
     </>
   );
 }

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { siteConfig } from "@/lib/config";
-import { ThemeToggle } from "./theme-toggle";
 
 export function Header() {
   return (
@@ -13,7 +12,6 @@ export function Header() {
           {siteConfig.name}
         </Link>
         <div className="flex items-center gap-2">
-          <ThemeToggle />
           {/* Placeholder. Becomes a link to /login, then a profile menu, in the login tasks. */}
           <button
             type="button"
