@@ -13,12 +13,21 @@ export interface MemberValues {
   email: string;
 }
 
-export interface AbstractFormValues {
+/** Team details shared by the abstract form and Final Registration. Member 1 is the team leader. */
+export interface TeamValues {
   teamName: string;
   college: string;
   leaderPhone: string;
   theme: string;
   members: [MemberValues, MemberValues, MemberValues];
+}
+
+/** Final Registration: team details plus the Team ID from the Round 1 email. */
+export interface FinalValues extends TeamValues {
+  teamId: string;
+}
+
+export interface AbstractFormValues extends TeamValues {
   /** Honeypot. Real people leave it empty. */
   website: string;
 }
@@ -29,6 +38,7 @@ export type FieldKey =
   | "college"
   | "leaderPhone"
   | "theme"
+  | "teamId"
   | `member${0 | 1 | 2}${Capitalize<MemberField>}`
   | "file";
 export type FieldErrors = Partial<Record<FieldKey, string>>;
@@ -42,13 +52,14 @@ export const FIELD_ORDER: FieldKey[] = [
   "college",
   "leaderPhone",
   "theme",
+  "teamId",
   ...([0, 1, 2] as const).flatMap((i) =>
     (["name", "usn", "email"] as const).map((f) => memberKey(i, f)),
   ),
   "file",
 ];
 
-export function emptyValues(): AbstractFormValues {
+export function emptyTeam(): TeamValues {
   const blank = (): MemberValues => ({ name: "", usn: "", email: "" });
   return {
     teamName: "",
@@ -56,10 +67,19 @@ export function emptyValues(): AbstractFormValues {
     leaderPhone: "",
     theme: "",
     members: [blank(), blank(), blank()],
-    website: "",
   };
 }
 
+export function emptyFinal(): FinalValues {
+  return { ...emptyTeam(), teamId: "" };
+}
+
+export function emptyValues(): AbstractFormValues {
+  return { ...emptyTeam(), website: "" };
+}
+
+/** Shape only. The server decides whether the ID belongs to a shortlisted team. */
+export const TEAM_ID_RE = /^[A-Za-z0-9-]{4,24}$/;
 export const PHONE_RE = /^[6-9]\d{9}$/;
 export const USN_RE = /^[A-Za-z0-9]{8,12}$/;
 export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -75,11 +95,8 @@ export interface FileInfo {
   size: number;
 }
 
-/** Returns an error message per invalid field. Empty object means valid. */
-export function validateRegistration(
-  values: AbstractFormValues,
-  file: FileInfo | null,
-): FieldErrors {
+/** Team details check, without the file. Used by the abstract form and Final Registration. */
+export function validateTeamDetails(values: TeamValues): FieldErrors {
   const errors: FieldErrors = {};
 
   if (!values.teamName.trim()) errors.teamName = "Enter your team name.";
@@ -132,10 +149,30 @@ export function validateRegistration(
     }
   });
 
+  return errors;
+}
+
+/** Final Registration check: team details plus the Round 1 Team ID. */
+export function validateFinalRegistration(values: FinalValues): FieldErrors {
+  const errors = validateTeamDetails(values);
+  const id = values.teamId.trim();
+  if (!id) {
+    errors.teamId = "Enter the Team ID from your Round 1 email.";
+  } else if (!TEAM_ID_RE.test(id)) {
+    errors.teamId = "Team ID uses 4 to 24 letters, numbers or hyphens.";
+  }
+  return errors;
+}
+
+/** Returns an error message per invalid field. Empty object means valid. */
+export function validateRegistration(
+  values: AbstractFormValues,
+  file: FileInfo | null,
+): FieldErrors {
+  const errors = validateTeamDetails(values);
   if (!file || !ABSTRACT_NAME.test(file.name) || file.size > MAX_ABSTRACT_BYTES) {
     errors.file = `Attach a PDF, DOC, or DOCX abstract no larger than ${MAX_ABSTRACT_MB} MB.`;
   }
-
   return errors;
 }
 
