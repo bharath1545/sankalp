@@ -27,11 +27,17 @@ describe("SiteShell", () => {
     expect(screen.getByRole("main")).toHaveAttribute("id", "main");
   });
 
-  it("shows the Login button and theme toggle in the header", () => {
+  it("shows the Login button in the header", () => {
     setup();
     const header = screen.getByRole("banner");
     expect(header).toContainElement(screen.getByRole("button", { name: "Login" }));
-    expect(header).toContainElement(screen.getByRole("button", { name: /Switch to/ }));
+  });
+
+  it("puts the theme toggle in the dock, not the header", () => {
+    setup();
+    const toggle = screen.getByRole("button", { name: /Switch to/ });
+    expect(screen.getByRole("navigation", { name: "Primary" })).toContainElement(toggle);
+    expect(screen.getByRole("banner")).not.toContainElement(toggle);
   });
 
   it("links the site name to home", () => {

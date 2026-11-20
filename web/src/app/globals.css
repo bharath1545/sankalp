@@ -1100,3 +1100,300 @@ html.is-loading #loader {
     transform: translateX(0);
   }
 }
+
+/*
+ * Navigation dock. Icon-only pill, hidden over the hero and slid in after it.
+ * A label bubble shows on hover and focus, and hops across the icons once on first show.
+ * Design follows the approved dock preview.
+ */
+:root {
+  --dock: rgba(22, 12, 34, 0.94);
+  --dock-shadow: 0 18px 50px -14px rgba(0, 0, 0, 0.8);
+}
+:root[data-theme="light"] {
+  --dock: rgba(255, 255, 255, 0.97);
+  --dock-shadow: 4px 4px 0 #0d0d0d;
+}
+
+.dk-wrap {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  padding-inline: 12px;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(28px);
+  transition:
+    opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+    visibility 0s 0.5s;
+}
+.dk-wrap.show {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dk-wrap {
+    transition: none;
+  }
+}
+
+.dk {
+  position: relative;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--dock);
+  box-shadow: var(--dock-shadow);
+  transition:
+    background 0.3s,
+    border-color 0.3s;
+}
+:root[data-theme="light"] .dk {
+  border-color: #0d0d0d;
+}
+
+.dk-it {
+  all: unset;
+  box-sizing: border-box;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    background 0.2s,
+    transform 0.2s;
+}
+.dk-it:hover {
+  color: var(--white);
+  background: rgba(127, 127, 160, 0.14);
+}
+:root[data-theme="light"] .dk-it:hover {
+  background: var(--mid);
+}
+.dk-it:active {
+  transform: scale(0.94);
+}
+.dk-it:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+.dk-it svg {
+  width: 20px;
+  height: 20px;
+}
+.dk-it:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.dk-it:disabled:hover {
+  color: var(--muted);
+  background: none;
+}
+/* Active section: a small dot under the icon. */
+.dk-it[aria-current="true"] {
+  color: var(--white);
+}
+.dk-it[aria-current="true"]::after,
+.dk-more[data-active="true"]::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--cyan);
+}
+.dk-more[data-active="true"] {
+  color: var(--white);
+}
+.dk-it.cta {
+  margin-inline: 2px;
+  background: var(--grad);
+  color: var(--on-grad);
+}
+.dk-it.cta:hover {
+  background: var(--grad);
+  color: var(--on-grad);
+  filter: brightness(1.08);
+}
+.dk-it.cta::after {
+  display: none;
+}
+:root[data-theme="light"] .dk-it.cta {
+  border: 1px solid #0d0d0d;
+}
+.dk-sep {
+  width: 1px;
+  height: 24px;
+  margin-inline: 4px;
+  background: var(--line);
+}
+
+/* Sun and moon swap with the theme (next-themes sets data-theme on the root). */
+.dk-theme .sun,
+.dk-theme .moon {
+  display: none;
+}
+:root:not([data-theme="light"]) .dk-theme .sun {
+  display: block;
+}
+:root[data-theme="light"] .dk-theme .moon {
+  display: block;
+}
+
+/* More menu */
+.dk-sheet {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  min-width: 180px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--deep);
+  box-shadow: var(--dock-shadow);
+}
+:root[data-theme="light"] .dk-sheet {
+  border-color: #0d0d0d;
+}
+.dk-sheet li {
+  list-style: none;
+}
+.dk-sheet a,
+.dk-sheet button {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  color: var(--muted);
+  font:
+    500 14px var(--font-inter),
+    system-ui,
+    sans-serif;
+  cursor: pointer;
+}
+.dk-sheet a:hover,
+.dk-sheet a:focus-visible {
+  background: var(--mid);
+  color: var(--white);
+}
+.dk-sheet a:focus-visible,
+.dk-sheet button:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: -2px;
+}
+.dk-sheet button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.dk-sheet a[aria-current="true"] {
+  color: var(--white);
+}
+.dk-sheet svg {
+  width: 18px;
+  height: 18px;
+}
+.dk-phone-only {
+  display: none;
+}
+
+/* Label bubble above an icon: load preview, hover and focus. */
+.dk-bubble {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 0;
+  transform: translateX(-50%);
+  padding: 8px 14px;
+  border: 1px solid #463757;
+  border-radius: 8px;
+  background: #080510;
+  color: #f5f3fa;
+  font:
+    500 12px/1 var(--font-inter),
+    system-ui,
+    sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.2s,
+    left 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+:root[data-theme="light"] .dk-bubble {
+  border-color: #17111f;
+  background: #17111f;
+  color: #fff;
+}
+.dk-bubble.on {
+  opacity: 1;
+}
+.dk-bubble::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border: inherit;
+  border-top: 0;
+  border-left: 0;
+  background: inherit;
+  transform: translate(-50%, -4px) rotate(45deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .dk-bubble {
+    transition: opacity 0.01s;
+  }
+}
+
+/* Phones: slightly smaller icons, and Community Support moves into More. */
+@media (max-width: 520px) {
+  .dk-it {
+    width: 42px;
+    height: 42px;
+  }
+  .dk-opt {
+    display: none;
+  }
+  .dk-phone-only {
+    display: block;
+  }
+  .dk-sep {
+    margin-inline: 2px;
+  }
+  .dk-more[data-active-phone="true"]::after {
+    content: "";
+    position: absolute;
+    bottom: 4px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--cyan);
+  }
+  .dk-more[data-active-phone="true"] {
+    color: var(--white);
+  }
+}
