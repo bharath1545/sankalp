@@ -1397,3 +1397,34 @@ html.is-loading #loader {
     color: var(--white);
   }
 }
+
+/* Final Registration: themed select. Custom chevron, themed option list. */
+.fr-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.25rem;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%2362c6e4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+}
+:root[data-theme="light"] .fr-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%230d0d0d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
+}
+.fr-select:hover {
+  border-color: var(--cyan);
+}
+.fr-select option {
+  background: var(--deep);
+  color: var(--white);
+  padding: 0.5rem 0.75rem;
+}
+.fr-select option:checked,
+.fr-select option:hover {
+  background: var(--mid);
+  color: var(--white);
+}
+.fr-select option[value=""] {
+  color: var(--muted);
+}

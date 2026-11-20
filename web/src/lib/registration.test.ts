@@ -229,3 +229,33 @@ describe("submitRegistration", () => {
     await expect(submitRegistration(payload)).rejects.toThrow("offline");
   });
 });
+
+describe("validateTeamDetails", () => {
+  it("passes valid team details without a file", async () => {
+    const { validateTeamDetails, emptyTeam } = await import("./registration");
+    const t = emptyTeam();
+    t.teamName = "Alpha";
+    t.college = "AJIET";
+    t.leaderPhone = "9876543210";
+    t.theme = "x";
+    t.members[0] = { name: "Asha", usn: "4AL22CS001", email: "a@b.co" };
+    expect(validateTeamDetails(t)).toEqual({});
+  });
+
+  it("never reports a file error", async () => {
+    const { validateTeamDetails, emptyTeam } = await import("./registration");
+    expect(validateTeamDetails(emptyTeam()).file).toBeUndefined();
+  });
+});
+
+describe("validateFinalRegistration", () => {
+  it("requires a well-formed Team ID", async () => {
+    const { validateFinalRegistration, emptyFinal } = await import("./registration");
+    const v = emptyFinal();
+    expect(validateFinalRegistration(v).teamId).toMatch(/Round 1 email/);
+    v.teamId = "a b!";
+    expect(validateFinalRegistration(v).teamId).toMatch(/4 to 24/);
+    v.teamId = "SNK26-0001";
+    expect(validateFinalRegistration(v).teamId).toBeUndefined();
+  });
+});
