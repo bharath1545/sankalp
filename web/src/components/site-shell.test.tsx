@@ -27,10 +27,10 @@ describe("SiteShell", () => {
     expect(screen.getByRole("main")).toHaveAttribute("id", "main");
   });
 
-  it("shows the Login button in the header", () => {
+  it("shows the Login link in the header", () => {
     setup();
     const header = screen.getByRole("banner");
-    expect(header).toContainElement(screen.getByRole("button", { name: "Login" }));
+    expect(header).toContainElement(screen.getByRole("link", { name: "Login" }));
   });
 
   it("puts the theme toggle in the dock, not the header", () => {

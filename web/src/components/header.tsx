@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/lib/config";
+import { HeaderAccount } from "./header-account";
 
 export function Header() {
   return (
@@ -12,14 +13,7 @@ export function Header() {
           {siteConfig.name}
         </Link>
         <div className="flex items-center gap-2">
-          {/* Placeholder. Becomes a link to /login, then a profile menu, in the login tasks. */}
-          <button
-            type="button"
-            data-testid="login-button"
-            className="h-10 rounded-md border border-line-strong px-4 text-sm font-medium text-white transition-colors hover:bg-mid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan"
-          >
-            Login
-          </button>
+          <HeaderAccount />
         </div>
       </div>
     </header>
