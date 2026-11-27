@@ -35,9 +35,7 @@ export interface CleanSubmission {
 }
 
 export type SubmissionResult =
-  | { spam: true }
-  | { error: string }
-  | { submission: CleanSubmission };
+  { spam: true } | { error: string } | { submission: CleanSubmission };
 
 /** Strips control characters, trims and caps the length. Non-strings become "". */
 export function cleanText(value: unknown, maxLength: number): string {
