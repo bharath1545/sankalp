@@ -14,4 +14,5 @@ window.SANKALP_DATES = {
   registration: "2026-11-25", // last date of final team registration
   eventStart: "2026-11-27T10:30:00+05:30", // hackathon opening, IST
   eventEnd: "2026-11-28",     // last day of the hackathon
+  hourTimerEnd: "2026-11-28T11:06:00+05:30", // full-screen 24-hour timer ends, IST. After this the normal site shows.
 };
