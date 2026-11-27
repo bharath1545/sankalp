@@ -11,6 +11,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/loader.css">
+<link rel="stylesheet" href="assets/css/hourtimer.css">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
 <script>
 /* Show the loading screen on every page load. The timeout is a safety net in case loader.js fails. */
 (function(){var r=document.documentElement;r.classList.add('is-loading');setTimeout(function(){r.classList.remove('is-loading')},9000)})();
@@ -31,6 +33,28 @@
     <div class="ld-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading"><div class="ld-fill"></div></div>
     <div class="ld-row"><span>Loading</span><b>0%</b></div>
   </div>
+</div>
+
+<div id="hourTimer" hidden>
+  <div class="ht-bloom"></div>
+  <div class="ht-band ht-top" aria-hidden="true"><div class="ht-run"><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span></div></div>
+  <div class="ht-core">
+    <p class="ht-time" role="timer" aria-label="Sankalp ’26, time remaining"><span id="ht-h">--</span><i>:</i><span id="ht-m">--</span><i>:</i><span id="ht-s">--</span></p>
+    <div class="ht-ctl" id="ht-ctl" hidden>
+      <button type="button" id="ht-toggle">Pause</button>
+      <button type="button" id="ht-reset">Reset</button>
+      <form id="ht-set" novalidate>
+        <input id="ht-set-in" type="text" inputmode="numeric" placeholder="HH:MM:SS" autocomplete="off" aria-label="Set time remaining, HH:MM:SS">
+        <button type="submit">Set time</button>
+      </form>
+      <p class="ht-msg" id="ht-msg" role="status"></p>
+    </div>
+  </div>
+  <div class="ht-band ht-bot" aria-hidden="true"><div class="ht-run"><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span><span>Sankalp ’26 ✦</span></div></div>
+  <p class="ht-sr" id="ht-sr" aria-live="polite"></p>
+  <button type="button" class="ht-fs" id="ht-fs" aria-label="Toggle full screen" hidden>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg>
+  </button>
 </div>
 
 <nav>
@@ -365,6 +389,7 @@
 
 <script src="assets/js/loader.js" defer></script>
 <script src="assets/js/config.js" defer></script>
+<script src="assets/js/hourtimer.js" defer></script>
 <script src="assets/js/script.js" defer></script>
 </body>
 </html>

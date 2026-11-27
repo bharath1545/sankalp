@@ -1,0 +1,52 @@
+/* Full-screen 24-hour countdown, tape style. Only the wordmark (on the tape) and the timer.
+   Hidden until hourtimer.js shows it, so visitors without JavaScript never see a blocked page.
+   Colours and fonts follow the new site's design tokens (dark). Sizes use container units, so it fills any screen. */
+#hourTimer{
+  --ht-void:#080510;--ht-white:#f5f3fa;--ht-cyan:#62c6e4;--ht-pink:#e98fd0;--ht-line:#463757;
+  --ht-display:'Space Grotesk','Trebuchet MS',system-ui,sans-serif;
+  --ht-mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  position:fixed;inset:0;z-index:900;display:grid;place-items:center;overflow:hidden;container-type:size;
+  background:var(--ht-void);color:var(--ht-white)}
+#hourTimer[hidden]{display:none}
+html.has-hour-timer{overflow:hidden}
+.ht-bloom{position:absolute;left:50%;top:50%;width:140cqw;aspect-ratio:1.6;transform:translate(-50%,-50%);
+  border-radius:50%;pointer-events:none;filter:blur(18px);
+  background:radial-gradient(closest-side,rgba(98,198,228,.24),rgba(233,143,208,.13) 52%,transparent 75%)}
+.ht-band{position:absolute;left:-10%;width:120%;height:min(12cqh,9cqw);overflow:hidden;display:flex;align-items:center;
+  background:linear-gradient(100deg,var(--ht-cyan),var(--ht-pink));color:#080510;
+  font:700 min(5.5cqh,4cqw)/1 var(--ht-display);letter-spacing:.14em;text-transform:uppercase;
+  box-shadow:0 6px 30px rgba(0,0,0,.45);transform:rotate(-4deg)}
+.ht-top{top:12%}
+.ht-bot{bottom:12%}
+.ht-run{display:flex;white-space:nowrap;animation:ht-run 28s linear infinite}
+.ht-bot .ht-run{animation-direction:reverse}
+.ht-run span{padding-right:1.6em}
+@keyframes ht-run{to{transform:translateX(-50%)}}
+.ht-core{position:relative;display:grid;justify-items:center;gap:min(3.5cqh,2.5cqw)}
+.ht-time{position:relative;margin:0;font:700 min(17cqw,30cqh)/1 var(--ht-mono);font-variant-numeric:tabular-nums;
+  white-space:nowrap;letter-spacing:-.02em;text-shadow:0 0 36px rgba(233,143,208,.35)}
+.ht-time i{font-style:normal;color:var(--ht-cyan);padding:0 .02em}
+.ht-fs{position:absolute;right:max(14px,env(safe-area-inset-right,0px));bottom:max(14px,env(safe-area-inset-bottom,0px));z-index:2;
+  width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--ht-line);border-radius:8px;
+  background:rgba(8,5,16,.7);color:var(--ht-white);cursor:pointer;opacity:.45;transition:opacity .2s}
+.ht-fs:hover,.ht-fs:focus-visible{opacity:1}
+.ht-fs:focus-visible{outline:2px solid var(--ht-cyan);outline-offset:2px}
+.ht-fs[hidden]{display:none}
+.ht-fs svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ht-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (prefers-reduced-motion:reduce){.ht-run{animation:none}}
+#hourTimer:fullscreen{cursor:none}
+#hourTimer:fullscreen .ht-fs{display:none}
+/* Controls (shown with ?controls). Hidden in full screen but they keep their space, so the timer does not jump. */
+.ht-ctl{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;position:relative;z-index:2}
+.ht-ctl[hidden]{display:none}
+#hourTimer:fullscreen .ht-ctl{visibility:hidden}
+.ht-ctl button,.ht-ctl input{box-sizing:border-box;height:38px;border:1px solid var(--ht-line);border-radius:8px;background:rgba(8,5,16,.75);color:var(--ht-white);font:500 .85rem var(--ht-mono);padding:0 14px}
+.ht-ctl button{cursor:pointer}
+.ht-ctl button:hover{border-color:var(--ht-cyan)}
+.ht-ctl input{width:9.5em;padding:0 10px;margin:0}
+.ht-ctl input::placeholder{color:#a29aac}
+.ht-ctl button:focus-visible,.ht-ctl input:focus-visible{outline:2px solid var(--ht-cyan);outline-offset:2px}
+.ht-ctl form{display:flex;align-items:center;gap:8px;margin:0}
+.ht-msg{flex-basis:100%;margin:0;min-height:1.2em;text-align:center;font:500 .8rem var(--ht-mono);color:var(--ht-pink)}
+#hourTimer.paused .ht-time{opacity:.6}
