@@ -1,0 +1,39 @@
+/* After the countdown: confetti, then the thank-you messages in a loop, ending with a glitch
+   from संकल्प’26 to Sankalp’26. Used by finale.js inside #hourTimer. Dark theme, same tokens as the timer.
+   Sizes use container units (#hourTimer is a size container). Motion is off with reduced motion. */
+#hourTimer .ht-time,#hourTimer .ht-band{transition:opacity .7s ease}
+#hourTimer.finale .ht-time,#hourTimer.finale .ht-band{opacity:0;pointer-events:none}
+#hourTimer.fn-gone .ht-time,#hourTimer.fn-gone .ht-band{display:none}
+/* In the finale only the controls (with ?controls) stay, at the bottom. */
+#hourTimer.fn-gone .ht-core{position:absolute;left:50%;bottom:max(14px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:4}
+.fn{position:absolute;inset:0;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .8s ease .15s,visibility 0s .95s}
+#hourTimer.finale .fn{opacity:1;visibility:visible;transition:opacity .8s ease .15s}
+.fn-cv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.fn-grp{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;padding:0 5cqw;text-align:center}
+.fn-line,.fn-lead,.fn-big{margin:0;opacity:0;transform:translateY(1.4cqh);filter:blur(7px);
+  transition:opacity .6s ease,transform .6s ease,filter .6s ease}
+.fn-line.in,.fn-lead.in,.fn-big.in{opacity:1;transform:none;filter:none}
+.fn-line{font:700 min(6.6cqw,12cqh)/1.16 var(--ht-display);text-wrap:balance;max-width:20em;text-shadow:0 0 30px rgba(98,198,228,.28)}
+.fn-lead{font:500 min(4.6cqw,8.5cqh)/1.2 var(--ht-display);color:#cfc9d8;letter-spacing:.01em;
+  max-height:2em;margin-bottom:min(2.6cqh,1.6cqw);overflow:hidden;
+  transition:opacity .6s ease,transform .6s ease,filter .6s ease,max-height .8s ease,margin .8s ease}
+.fn-lead.gone{max-height:0;margin-bottom:0;opacity:0}
+.fn-big{--a1:0%;--b1:100%;--a2:0%;--b2:100%;--dx:0cqw;--jx:0cqw;--sk:0deg;
+  position:relative;display:inline-block;white-space:nowrap;
+  font:700 min(17cqw,30cqh)/1.1 var(--ht-display),'Noto Sans Devanagari','Nirmala UI','Mangal',sans-serif;
+  font-family:var(--ht-display),'Noto Sans Devanagari','Nirmala UI','Mangal',sans-serif;
+  letter-spacing:-.01em;padding:0 .08em}
+.fn-big.in{transform:translateX(var(--jx)) skewX(var(--sk))}
+.fn-big.on{transition:opacity .6s ease,filter .6s ease}
+.fn-big .gt{background:linear-gradient(100deg,var(--ht-cyan),var(--ht-pink));-webkit-background-clip:text;background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 2.2cqw rgba(98,198,228,.32))}
+/* Chromatic split layers. Each shows a random horizontal slice, pushed left and right. */
+.fn-big::before,.fn-big::after{content:attr(data-text);position:absolute;inset:0;padding:inherit;pointer-events:none;
+  opacity:0;white-space:nowrap;text-align:center;background:none;-webkit-text-fill-color:currentColor}
+.fn-big::before{color:var(--ht-cyan);transform:translateX(calc(var(--dx) * -1));clip-path:inset(var(--a1) 0 var(--b1) 0)}
+.fn-big::after{color:var(--ht-pink);transform:translateX(var(--dx));clip-path:inset(var(--a2) 0 var(--b2) 0)}
+.fn-big.on::before,.fn-big.on::after{opacity:.95}
+.fn-big.flash .gt{filter:brightness(1.7) drop-shadow(0 0 3cqw rgba(255,255,255,.5))}
+@media (prefers-reduced-motion:reduce){
+  .fn-line,.fn-lead,.fn-big{transform:none;filter:none;transition:opacity .6s ease}
+}

@@ -1,34 +1,31 @@
 /* Full-screen 24-hour countdown overlay.
    The default end time is SANKALP_DATES.hourTimerEnd in config.js.
-   Open the site with ?controls to show Pause/Start, Reset and Set time under the timer.
+   At 00:00:00 finale.js takes over: confetti, then the thank-you messages in a loop.
+   The overlay stays after the end, so visitors who arrive later also see the finale, not the old site.
+   Open the site with ?controls to show Pause/Start, Reset and Set time. Reset or Set time brings the timer back.
    Those changes are saved in this browser only (localStorage), so visitors are never affected.
-   When the time runs out the overlay removes itself, except with ?controls. */
+   No internet: the timer pauses and carries on when the connection is back. Every 5 seconds it asks
+   this site for a small file (config.js). If that fails twice, or the browser says it is offline, it pauses. */
 (function () {
   'use strict';
   var KEY = 'sankalp-hour-timer';
   var FULL = 24 * 3600 * 1000;
+  var PING = 'assets/js/config.js'; // same site, so a blocked Google or a school firewall cannot pause the timer
   var box = document.getElementById('hourTimer');
   var dates = window.SANKALP_DATES || {};
   var defaultEnd = Date.parse(dates.hourTimerEnd);
   if (!box || isNaN(defaultEnd)) return;
 
   var controls = /[?&]controls(=|&|$)/.test(location.search);
-  var hh = document.getElementById('ht-h');
-  var mm = document.getElementById('ht-m');
-  var ss = document.getElementById('ht-s');
-  var sr = document.getElementById('ht-sr');
-  var btn = document.getElementById('ht-fs');
-  var ctl = document.getElementById('ht-ctl');
-  var toggleBtn = document.getElementById('ht-toggle');
-  var resetBtn = document.getElementById('ht-reset');
-  var setForm = document.getElementById('ht-set');
-  var setInput = document.getElementById('ht-set-in');
-  var msg = document.getElementById('ht-msg');
+  var $ = function (id) { return document.getElementById(id); };
+  var hh = $('ht-h'), mm = $('ht-m'), ss = $('ht-s'), sr = $('ht-sr'), btn = $('ht-fs');
+  var ctl = $('ht-ctl'), toggleBtn = $('ht-toggle'), resetBtn = $('ht-reset');
+  var setForm = $('ht-set'), setInput = $('ht-set-in'), msg = $('ht-msg');
   var root = document.documentElement;
-  var timer = null;
   var lastMin = -1;
+  var finaleOn = false;
 
-  // State is either { end: ms } (running) or { paused: true, remaining: ms }.
+  // State is { end: ms } (running) or { paused: true, remaining: ms [, auto: true] }.
   function load() {
     try {
       var v = JSON.parse(localStorage.getItem(KEY));
@@ -44,7 +41,21 @@
   }
   function pad(n) { return (n < 10 ? '0' : '') + n; }
 
-  if (!controls && !state.paused && remaining() === 0) return;
+  var hasFinale = !!window.SankalpFinale;
+  var late = !state.paused && remaining() === 0;
+  // Without the finale script, keep the old behaviour: show nothing after the end.
+  if (late && !hasFinale) return;
+
+  function startFinale(immediate) {
+    if (finaleOn || !hasFinale) return;
+    finaleOn = true;
+    window.SankalpFinale.start(box, { immediate: immediate });
+  }
+  function stopFinale() {
+    if (!finaleOn) return;
+    finaleOn = false;
+    window.SankalpFinale.stop();
+  }
 
   function tick() {
     var left = remaining();
@@ -57,16 +68,10 @@
     var min = Math.floor(s / 60);
     if (min !== lastMin) {
       lastMin = min;
-      sr.textContent = Math.floor(s / 3600) + ' hours ' + (min % 60) + ' minutes remaining';
+      if (!finaleOn) sr.textContent = Math.floor(s / 3600) + ' hours ' + (min % 60) + ' minutes remaining';
     }
-    if (s === 0 && !state.paused && !controls) finish();
-  }
-
-  function finish() {
-    clearInterval(timer);
-    if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen();
-    box.hidden = true;
-    root.classList.remove('has-hour-timer');
+    if (s === 0 && !state.paused) startFinale(false);
+    else if (finaleOn && (s > 0 || state.paused)) stopFinale();
   }
 
   function toggleFullscreen() {
@@ -109,8 +114,41 @@
     });
   }
 
+  // Pause while offline. An automatic pause carries { auto: true } so only it resumes by itself.
+  var fails = 0, lastOk = Date.now(), checking = false;
+  function goOffline() {
+    if (state.paused || remaining() === 0) return;
+    // Count the time up to the last good check, not the seconds spent finding out.
+    state = { paused: true, remaining: Math.max(0, state.end - lastOk), auto: true };
+    save(); tick();
+  }
+  function goOnline() {
+    if (state.paused && state.auto) {
+      state = { end: Date.now() + state.remaining };
+      save(); tick();
+    }
+  }
+  function check() {
+    if (checking) return;
+    if (navigator.onLine === false) { lastOk = Date.now(); fails = 2; goOffline(); return; }
+    if (typeof fetch !== 'function') return;
+    checking = true;
+    var ac = typeof AbortController === 'function' ? new AbortController() : null;
+    var to = setTimeout(function () { if (ac) ac.abort(); }, 4000);
+    fetch(PING + '?t=' + Date.now(), { method: 'HEAD', cache: 'no-store', signal: ac ? ac.signal : undefined })
+      .then(function () { fails = 0; lastOk = Date.now(); goOnline(); })
+      .catch(function () { fails++; if (fails >= 2) goOffline(); })
+      .then(function () { clearTimeout(to); checking = false; });
+  }
+
   root.classList.add('has-hour-timer');
   box.hidden = false;
+  if (late) startFinale(true);
   tick();
-  timer = setInterval(tick, 1000);
+  setInterval(tick, 1000);
+  setInterval(check, 5000);
+  window.addEventListener('online', check);
+  window.addEventListener('offline', check);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) check(); });
+  check();
 })();
