@@ -26,7 +26,7 @@ html.has-hour-timer{overflow:hidden}
 .ht-time{position:relative;margin:0;font:700 min(17cqw,30cqh)/1 var(--ht-mono);font-variant-numeric:tabular-nums;
   white-space:nowrap;letter-spacing:-.02em;text-shadow:0 0 36px rgba(233,143,208,.35)}
 .ht-time i{font-style:normal;color:var(--ht-cyan);padding:0 .02em}
-.ht-fs{position:absolute;right:max(14px,env(safe-area-inset-right,0px));bottom:max(14px,env(safe-area-inset-bottom,0px));z-index:2;
+.ht-fs{position:absolute;right:max(14px,env(safe-area-inset-right,0px));bottom:max(14px,env(safe-area-inset-bottom,0px));z-index:5;
   width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--ht-line);border-radius:8px;
   background:rgba(8,5,16,.7);color:var(--ht-white);cursor:pointer;opacity:.45;transition:opacity .2s}
 .ht-fs:hover,.ht-fs:focus-visible{opacity:1}
